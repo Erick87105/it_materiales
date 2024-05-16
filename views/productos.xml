@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Tree View -->
+        <record model="ir.ui.view" id="materiales_productos_tree_view" >
+            <field name="name">materiales.productos.tree</field>
+            <field name="model">materiales.productos</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Productos">
+                    <field name="name"/>
+                    <field name="brand"/>
+                    <field name="model"/>
+                    <field name="type"/>
+                    <field name="value"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record  model="ir.ui.view" id="materiales_productos_form_view">
+            <field name="name">materiales.productos.form</field>
+            <field name="model">materiales.productos</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Productos">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="brand"/>
+                            <field name="model"/>
+                            <field name="type"/>
+                            <field name="value"/>
+                            <field name="status"/>
+                            <field name="maintenance_program"/>
+                            <field name="observations"/>
+                            <field name="odoo_id"/>
+                            <field name="years_of_life"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Search View -->
+        <record model="ir.ui.view" id="materiales_productos_search_view">
+            <field name="name">materiales.productos.search</field>
+            <field name="model">materiales.productos</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="brand"/>
+                    <field name="model"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="materiales_productos_action" model="ir.actions.act_window">
+            <field name="name">Productos</field>
+            <field name="res_model">materiales.productos</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</openerp>

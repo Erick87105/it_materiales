@@ -1,0 +1,36 @@
+<openerp>
+    <data>
+        <!-- Vista tipo tree del modelo helloworld.documentos -->
+        <record model="ir.ui.view" id="materiales_parametros_tree">
+            <field name="name">materiales.parametros.tree</field>
+            <field name="model">materiales.parametros</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="parametros" editable = "bottom">
+                    <field name="key"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        
+
+        <!-- Vista de búsqueda del modelo it_titulaciones.documentos -->
+        <record model="ir.ui.view" id="materiales_parametros_search">
+            <field name="name">materiales.parametros.search</field>
+            <field name="model">materiales.parametros</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="key"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Acción para el modelo it_titulaciones.documentos -->
+        <record id="materiales_parametros_action" model="ir.actions.act_window">
+            <field name="name">Parametros</field>
+            <field name="res_model">materiales.parametros</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</openerp>

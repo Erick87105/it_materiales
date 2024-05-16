@@ -1,0 +1,18 @@
+<openerp>
+    <data>
+        <menuitem name="Materiales" id="menu_materiales" sequence="20"/>
+        
+        <menuitem name="Configuración" id="menu_materiales_configuracion" parent="menu_materiales" sequence="10"/>
+            
+            <menuitem name="Parametros del sistema" action="materiales_parametros_action" id="menu_materiales_parametros" sequence="20" parent="menu_materiales_configuracion"/>
+            <menuitem name="Ubicaciones" action="materiales_ubicaciones_action" id="menu_materiales_ubicaciones" sequence="30" parent="menu_materiales_configuracion"/>
+            <menuitem name="Proveedores" action="materiales_proveedor_action" id="menu_materiales_proveedor" sequence="40" parent="menu_materiales_configuracion"/>   
+            <menuitem name="Productos" action="materiales_productos_action" id="menu_materiales_productos" sequence="45" parent="menu_materiales_configuracion"/>      
+        <menuitem name="Mantenimiento" id="menu_materiales_procesos" parent="menu_materiales" sequence="50"/>                                            
+            <menuitem name="Lista de verificacion" action="materiales_programa_action" id="menu_materiales_programa" sequence="60" parent="menu_materiales_procesos"/>
+            <menuitem name="Progama de mantenimiento" action="materiales_evaluacion_action" id="menu_materiales_evaluacion" sequence="70" parent="menu_materiales_procesos"/>
+            <menuitem name="Solicitud de mantenimiento" action="materiales_criterios_action" id="menu_materiales_criterios" sequence="80" parent="menu_materiales_procesos"/>
+            
+        
+    </data>
+</openerp> 

@@ -1,0 +1,72 @@
+<openerp>
+    <data>
+        <!-- Definición de una vista de formularios para la evaluación de proveedores -->
+        <record model="ir.ui.view" id="materiales_evaluacion_tree_view">
+            <field name="name">materiales.evaluacion.tree</field>
+            <field name="model">materiales.evaluacion</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="proveedor_id" string="Proveedor"/>
+                    <field name="nombre_empresa" string="Nombre de la Empresa"/>
+                    <field name="domicilio"/>
+                    <field name="correo"/>
+                    <field name="representante"/>
+                    <field name="ciudad"/>
+                    <field name="telefono"/>
+                    <field name="rfc"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Definición de una vista de formularios para la evaluación de proveedores -->
+        <record model="ir.ui.view" id="materiales_evaluacion_form_view">
+            <field name="name">materiales.evaluacion.form</field>
+            <field name="model">materiales.evaluacion</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Evaluación de Proveedores">
+                    <sheet>
+                        <group>
+                            <!-- Modificar el campo para mostrar el nombre de la empresa -->
+                            <field name="proveedor_id" string="Proveedor" options='{"no_open": True}'/>
+                            <!-- Campo de solo lectura para mostrar el nombre de la empresa -->
+                            <field name="nombre_empresa" string="Nombre de la Empresa" readonly="1"/>
+                            <field name="domicilio" readonly="1"/>
+                            <field name="correo" readonly="1"/>
+                            <field name="representante" readonly="1"/>
+                            <field name="ciudad" readonly="1"/>
+                            <field name="telefono" readonly="1"/>
+                            <field name="rfc" readonly="1"/>
+                        </group>
+                        <group>
+                            <!-- Campos para los criterios de evaluación -->
+                            <field name="criterio_1"/>
+                            <field name="criterio_2"/>
+                            <field name="criterio_3"/>
+                            <field name="criterio_4"/>
+                            <field name="criterio_5"/>
+                            <field name="criterio_6"/>
+                            <field name="criterio_7"/>
+                            <field name="criterio_8"/>
+                            <field name="criterio_9"/>
+                            <field name="criterio_10"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción para abrir la vista de detalles desde la vista principal -->
+        <record id="materiales_evaluacion_action" model="ir.actions.act_window">
+            <field name="name">Evaluación de Proveedores</field>
+            <field name="res_model">materiales.evaluacion</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="materiales_evaluacion_tree_view"/>
+        </record>
+    </data>
+</openerp>
+
+
+
+
