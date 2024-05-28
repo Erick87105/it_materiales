@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Vista tipo tree del modelo catalogo.productos -->
+        <record model="ir.ui.view" id="catalogoproductos_tree">
+            <field name="name">catalogoproductos.tree</field>
+            <field name="model">catalogo.productos</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Catálogo de Productos">
+                    <field name="clave"/>
+                    <field name="nombre"/>
+                    <field name="precio_actual"/>
+                    <field name="categoria"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Acción para el modelo de catalogo.productos -->
+        <record id="materiales_catalogoproductos_action" model="ir.actions.act_window">
+            <field name="name">Catálogo de Productos</field>
+            <field name="res_model">catalogo.productos</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</openerp>

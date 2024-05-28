@@ -6,12 +6,17 @@
             
             <menuitem name="Parametros del sistema" action="materiales_parametros_action" id="menu_materiales_parametros" sequence="20" parent="menu_materiales_configuracion"/>
             <menuitem name="Ubicaciones" action="materiales_ubicaciones_action" id="menu_materiales_ubicaciones" sequence="30" parent="menu_materiales_configuracion"/>
-            <menuitem name="Proveedores" action="materiales_proveedor_action" id="menu_materiales_proveedor" sequence="40" parent="menu_materiales_configuracion"/>   
-            <menuitem name="Productos" action="materiales_productos_action" id="menu_materiales_productos" sequence="45" parent="menu_materiales_configuracion"/>      
+            <menuitem name="Proveedores" action="materiales_proveedor_action" id="menu_materiales_proveedor" sequence="40" parent="menu_materiales_configuracion"/>
+            <menuitem name="Compras" action="materiales_compras_action" id="menu_materiales_compras" sequence="44" parent="menu_materiales_configuracion"/>
+            <menuitem name="Recepciones" action="materiales_recepcion_action" id="menu_materiales_recepcion" sequence="45" parent="menu_materiales_configuracion"/>  
+            <menuitem name="Lista de Precios" action="materiales_listaprecios_action" id="menu_materiales_listaprecios" sequence="46" parent="menu_materiales_configuracion"/>
+            <menuitem name="Catalogo de Productos" action="materiales_catalogoproductos_action" id="menu_materiales_catalogoproductos" sequence="47" parent="menu_materiales_configuracion"/> 
+            <menuitem name="Productos" action="materiales_productos_action" id="menu_materiales_productos" sequence="48" parent="menu_materiales_configuracion"/>
+            <!--<menuitem name="Entrega de Productos" action="materiales_entregaproductos_action" id="menu_materiales_entregaproductos" sequence="49" parent="menu_materiales_configuracion"/>-->   
         <menuitem name="Mantenimiento" id="menu_materiales_procesos" parent="menu_materiales" sequence="50"/>                                            
-            <menuitem name="Lista de verificacion" action="materiales_programa_action" id="menu_materiales_programa" sequence="60" parent="menu_materiales_procesos"/>
-            <menuitem name="Progama de mantenimiento" action="materiales_evaluacion_action" id="menu_materiales_evaluacion" sequence="70" parent="menu_materiales_procesos"/>
-            <menuitem name="Solicitud de mantenimiento" action="materiales_criterios_action" id="menu_materiales_criterios" sequence="80" parent="menu_materiales_procesos"/>
+            <menuitem name="Programa" action="materiales_programa_action" id="menu_materiales_programa" sequence="60" parent="menu_materiales_procesos"/>
+            <menuitem name="Evaluacion de proveedores" action="materiales_evaluacion_action" id="menu_materiales_evaluacion" sequence="70" parent="menu_materiales_procesos"/>
+            <menuitem name="Cri" action="materiales_criterios_action" id="menu_materiales_criterios" sequence="80" parent="menu_materiales_procesos"/>
             
         
     </data>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Vista tipo tree del modelo materiales.compras -->
+        <record model="ir.ui.view" id="materiales_compras_tree">
+            <field name="name">materiales.compras.tree</field>
+            <field name="model">materiales.comprados</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Compras">
+                    <field name="name"/>
+                    <field name="fecha"/>
+                    <field name="proveedor_id"/>
+                    <field name="status" widget="statusbar"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista tipo form del modelo materiales.compras -->
+        <record model="ir.ui.view" id="materiales_compras_form">
+            <field name="name">materiales.compras.form</field>
+            <field name="model">materiales.comprados</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Compras">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                        <button name="action_confirm" type="object" string="Confirmar compra" status="creado" class="oe_highlight"/>
+                        <!-- <button name="action_receive" type="object" string="Recibir" status="pedido" class="oe_highlight"/> -->
+                        <button name="action_cancel" type="object" string="Cancelar" status="creado,pedido,recibido" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group string="Información de Compra">
+                            <field name="name"/> 
+                            <field name="fecha"/>
+                            <field name="proveedor_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Detalles de Compra">
+                                <field name="detalle_ids" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name="concepto_requisicion"/>
+                                        <field name="producto"/>
+                                        <field name="cantidad"/>
+                                        <field name="costo_estimado"/>
+                                        <field name="costo_real"/>
+                                        <field name="factura"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="total"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vista de búsqueda del modelo materiales.compras -->
+        <record model="ir.ui.view" id="materiales_compras_search">
+            <field name="name">materiales.compras.search</field>
+            <field name="model">materiales.comprados</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="fecha" />
+                    <field name="proveedor_id" />
+                    <field name="status" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Acción para el modelo de compras -->
+        <record id="materiales_compras_action" model="ir.actions.act_window">
+            <field name="name">Compras</field>
+            <field name="res_model">materiales.comprados</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</openerp>

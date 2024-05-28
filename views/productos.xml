@@ -1,65 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!-- Tree View -->
-        <record model="ir.ui.view" id="materiales_productos_tree_view" >
+        <!-- Vista tipo tree del modelo it_materiales.productos -->
+        <record model="ir.ui.view" id="materiales_productos_tree">
             <field name="name">materiales.productos.tree</field>
             <field name="model">materiales.productos</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Productos">
-                    <field name="name"/>
-                    <field name="brand"/>
-                    <field name="model"/>
-                    <field name="type"/>
-                    <field name="value"/>
-                    <field name="status"/>
+                <tree string="List">
+                    <field name="name" />
+                    <field name="marca" />
+                    <field name="modelo" />
+                    <field name="serie" />
                 </tree>
             </field>
         </record>
 
-        <!-- Form View -->
-        <record  model="ir.ui.view" id="materiales_productos_form_view">
+        <!-- Vista tipo form del modelo materiales.productos -->
+        <record model="ir.ui.view" id="materiales_productos_form">
             <field name="name">materiales.productos.form</field>
             <field name="model">materiales.productos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Productos">
+                <form>
                     <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="brand"/>
-                            <field name="model"/>
-                            <field name="type"/>
-                            <field name="value"/>
-                            <field name="status"/>
-                            <field name="maintenance_program"/>
-                            <field name="observations"/>
-                            <field name="odoo_id"/>
-                            <field name="years_of_life"/>
-                            <field name="description"/>
+                        <group string="Datos del Producto">
+                            <field name="foto" widget="image" class='oe_avatar' placeholder="Imagen del Producto" />
+                            <field name="name" placeholder="Nombre del Producto" />
+                            <field name="marca" placeholder="Marca" />
+                            <field name="modelo" placeholder="Modelo" />
+                            <field name="serie" placeholder="Identificación de Serie" />
+                            <field name="tipo_producto"/>
+                            <field name="valor_actual"/>
+                            <field name="activo"/>
+                            <field name="estatus"/>
+                            <field name="anos_vida_util"/>
+                            <field name="observaciones"/>
+                            <field name="descripcion"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
-
-        <!-- Search View -->
-        <record model="ir.ui.view" id="materiales_productos_search_view">
+        <!-- Vista de búsqueda del modelo it_materiales.productos -->
+        <record model="ir.ui.view" id="materiales_productos_search">
             <field name="name">materiales.productos.search</field>
             <field name="model">materiales.productos</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name"/>
-                    <field name="brand"/>
-                    <field name="model"/>
-                    <field name="type"/>
+                    <field name="name" />
+                    <field name="marca" />
+                    <field name="modelo" />
+                    <field name="serie" />
                 </search>
             </field>
         </record>
 
-        <!-- Action -->
+        <!-- Acción para el modelo it_materiales.productos -->
         <record id="materiales_productos_action" model="ir.actions.act_window">
             <field name="name">Productos</field>
             <field name="res_model">materiales.productos</field>

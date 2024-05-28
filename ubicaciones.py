@@ -7,3 +7,4 @@ class materiales(models.Model):
     Departamento = fields.Char(string='Departamento')
     Edificio = fields.Char(string='Edificio')
     Area = fields.Char(string='Area')
+    
