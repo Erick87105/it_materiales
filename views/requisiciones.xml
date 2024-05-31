@@ -1,0 +1,68 @@
+<openerp>
+    <data>
+        <!-- Vista tree -->
+        <record id="view_itsa_planeacion_requisiciones_tree" model="ir.ui.view">
+            <field name="name">itsa.planeacion.requisiciones.tree</field>
+            <field name="model">itsa.planeacion.requisiciones</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="fecha_sol"/>
+                    <field name="state"/>
+                    <!-- Agrega otros campos aquí -->
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista form -->
+        <record id="view_itsa_planeacion_requisiciones_form" model="ir.ui.view">
+            <field name="name">itsa.planeacion.requisiciones.form</field>
+            <field name="model">itsa.planeacion.requisiciones</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="fecha_sol"/>
+                            <field name="state"/>
+                            <!-- Agrega otros campos aquí -->
+                        </group>
+                        <notebook>
+                            <page string="Detalle">
+                                <field name="req_ids">
+                                    <tree editable="bottom">
+                                        <field name="producto_id"/>
+                                        <field name="cantidad"/>
+                                        <field name="costo"/>
+                                        <field name="importe"/>
+                                        <field name="importe_real"/>
+                                        <field name="saldo"/>
+                                        <field name="auth_recb"/>
+                                        <field name="saldo_enpart"/>
+                                        <!-- Agrega otros campos del detalle aquí -->
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción para la vista tree -->
+        <record id="action_itsa_planeacion_requisiciones_tree" model="ir.actions.act_window">
+            <field name="name">Requisiciones</field>
+            <field name="res_model">itsa.planeacion.requisiciones</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Acción para la vista form -->
+        <!-- <record id="action_itsa_planeacion_requisiciones_form" model="ir.actions.act_window">
+            <field name="name">Requisición</field>
+            <field name="res_model">itsa.planeacion.requisiciones</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record> -->
+    </data>
+</openerp>

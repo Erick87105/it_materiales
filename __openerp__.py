@@ -17,6 +17,7 @@
         'views/catalogoproductos.xml',
         'views/productos.xml',
         #'views/entregaproductos.xml',
+        'views/requisiciones.xml',
         'views/evaluacion.xml',
         'views/proveedor.xml',
         'views/criterios.xml',

@@ -12,6 +12,7 @@
                     <field name="fecha"/>
                     <field name="proveedor_id"/>
                     <field name="status" widget="statusbar"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
@@ -34,12 +35,14 @@
                             <field name="name"/> 
                             <field name="fecha"/>
                             <field name="proveedor_id"/>
+                            <field name="total"/>
+                            <field name="totalr"/>
                         </group>
                         <notebook>
                             <page string="Detalles de Compra">
                                 <field name="detalle_ids" widget="one2many_list">
                                     <tree editable="bottom">
-                                        <field name="concepto_requisicion"/>
+                                        <field name="requisicion_id"/>
                                         <field name="producto"/>
                                         <field name="cantidad"/>
                                         <field name="costo_estimado"/>
@@ -49,9 +52,6 @@
                                 </field>
                             </page>
                         </notebook>
-                        <group>
-                            <field name="total"/>
-                        </group>
                     </sheet>
                 </form>
             </field>

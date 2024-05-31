@@ -1,19 +1,20 @@
 <openerp>
     <data>
-        <!-- Vista tipo tree del modelo helloworld.documentos -->
+        <!-- Vista tipo tree proveedores -->
         <record model="ir.ui.view" id="materiales_proveedor_tree">
             <field name="name">materiales.proveedor.tree</field>
             <field name="model">materiales.proveedor</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="proveedor" editable = "bottom">
+                    <field name="rfc"/>
                     <field name="name"/>
                     <field name="domicilio"/>
                     <field name="correo"/>
                     <field name="representante"/>
                     <field name="ciudad"/>
                     <field name="telefono"/>
-                    <field name="rfc"/>
+                
                 </tree>
             </field>
         </record>
@@ -27,6 +28,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    <field name="rfc"/>
                 </search>
             </field>
         </record>

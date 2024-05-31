@@ -12,12 +12,12 @@
             <menuitem name="Lista de Precios" action="materiales_listaprecios_action" id="menu_materiales_listaprecios" sequence="46" parent="menu_materiales_configuracion"/>
             <menuitem name="Catalogo de Productos" action="materiales_catalogoproductos_action" id="menu_materiales_catalogoproductos" sequence="47" parent="menu_materiales_configuracion"/> 
             <menuitem name="Productos" action="materiales_productos_action" id="menu_materiales_productos" sequence="48" parent="menu_materiales_configuracion"/>
-            <!--<menuitem name="Entrega de Productos" action="materiales_entregaproductos_action" id="menu_materiales_entregaproductos" sequence="49" parent="menu_materiales_configuracion"/>-->   
+            <!--<menuitem name="Entrega de Productos" action="materiales_entregaproductos_action" id="menu_materiales_entregaproductos" sequence="49" parent="menu_materiales_configuracion"/>  -->   
         <menuitem name="Mantenimiento" id="menu_materiales_procesos" parent="menu_materiales" sequence="50"/>                                            
             <menuitem name="Programa" action="materiales_programa_action" id="menu_materiales_programa" sequence="60" parent="menu_materiales_procesos"/>
             <menuitem name="Evaluacion de proveedores" action="materiales_evaluacion_action" id="menu_materiales_evaluacion" sequence="70" parent="menu_materiales_procesos"/>
             <menuitem name="Cri" action="materiales_criterios_action" id="menu_materiales_criterios" sequence="80" parent="menu_materiales_procesos"/>
-            
+            <menuitem name="Requisiciones" id="menu_requisiciones" action="action_itsa_planeacion_requisiciones_tree" parent="menu_materiales_procesos"/>
         
     </data>
 </openerp> 

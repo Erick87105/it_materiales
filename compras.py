@@ -13,18 +13,29 @@ class Compras(models.Model):
     ]
 
     name = fields.Char(string='Folio',readonly=True)
-    fecha = fields.Date(string='Fecha', default=fields.Date.context_today, readonly=True)
+    
+    fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)
+
     proveedor_id = fields.Many2one('materiales.proveedor', string='Proveedor', required=True)
-    status = fields.Selection(STATUS_SELECTION, string='Estatus', default='creado')
+    status = fields.Selection(STATUS_SELECTION, string='Estado', default='creado')
     detalle_ids = fields.One2many('materiales.compras_detalle', 'compra_id', string='Detalles de Compra')
     
-    total = fields.Float(string='Total', compute='_compute_total', store=True)
+    total = fields.Float(string='Total estimado', compute='_compute_costo_estimado', store=True)
 
     @api.depends('detalle_ids.costo_estimado', 'detalle_ids.cantidad')
-    def _compute_total(self):
+    def _compute_costo_estimado(self):
         for compra in self:
             total = sum(detalle.costo_estimado * detalle.cantidad for detalle in compra.detalle_ids)
             compra.total = total
+            
+    totalr = fields.Float(string='Total real', compute='_compute_total', store=True)
+
+    @api.depends('detalle_ids.costo_real', 'detalle_ids.cantidad')
+    def _compute_total(self):
+        for compra in self:
+            totalr = sum(detalle.costo_real * detalle.cantidad for detalle in compra.detalle_ids)
+            compra.totalr = totalr
+            
     # Método para cambiar el estado de 'Creado' a 'Pedido'
     @api.multi
     def action_confirm(self):
@@ -39,24 +50,32 @@ class Compras(models.Model):
     @api.multi
     def action_cancel(self):
         self.write({'status': 'cancelado'})
-
-    # def _compute_total(self):
-    #     for compra in self:
-    #         total = sum(detalle.costo_real for detalle in compra.detalle_ids)
-    #         compra.total = total
             
     @api.model
     def create(self,vals):
         vals['name'] = self.env['ir.sequence'].next_by_code('Foliocompras')
         return super(Compras,self).create(vals)
     
+
+
 class Detalle(models.Model):
     _name = 'materiales.compras_detalle'
 
     compra_id = fields.Many2one('materiales.comprados', string='Compra')
-    concepto_requisicion = fields.Selection([('concepto1', 'Concepto 1'), ('concepto2', 'Concepto 2'), ('concepto3', 'Concepto 3')], string='Concepto Requisición')
+    requisicion_id = fields.Many2one('itsa.planeacion.requisiciones', string='Requisicion', required=True)
     producto = fields.Char(string='Producto')
     cantidad = fields.Integer(string='Cantidad', default=1)
     costo_estimado = fields.Float(string='Costo Estimado')
     costo_real = fields.Float(string='Costo Real')
     factura = fields.Char(string='Factura')
+    
+    @api.onchange('requisicion_id')
+    def _onchange_requisicion_id(self):
+        if self.requisicion_id:
+            detalles = self.requisicion_id.req_ids
+            # Actualizar automáticamente los campos producto, cantidad y costo_real basándose en la requisición seleccionada
+            self.update({
+                'producto': detalles[0].producto_id if detalles else '',
+                'cantidad': detalles[0].cantidad if detalles else 1,
+                'costo_estimado': detalles[0].costo if detalles else 0.0,
+            })
