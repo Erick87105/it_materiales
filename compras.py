@@ -73,9 +73,27 @@ class Detalle(models.Model):
     def _onchange_requisicion_id(self):
         if self.requisicion_id:
             detalles = self.requisicion_id.req_ids
-            # Actualizar automáticamente los campos producto, cantidad y costo_real basándose en la requisición seleccionada
-            self.update({
-                'producto': detalles[0].producto_id if detalles else '',
-                'cantidad': detalles[0].cantidad if detalles else 1,
-                'costo_estimado': detalles[0].costo if detalles else 0.0,
-            })
+            if detalles:
+                # Actualizar automáticamente los campos producto, cantidad y costo_estimado basándose en la requisición seleccionada
+                self.update({
+                    'producto': detalles[0].producto_id if detalles else '',
+                    'cantidad': detalles[0].cantidad if detalles else 1,
+                    'costo_estimado': detalles[0].costo if detalles else 0.0,
+                })
+                
+                # Crear las líneas de detalles en compra_id basándose en los detalles de requisicion_id
+                lineas = []
+                for detalle in detalles:
+                    lineas.append((0, 0, {
+                        'producto': detalle.producto_id if detalle.producto_id else '',
+                        'cantidad': detalle.cantidad,
+                        'costo_estimado': detalle.costo,
+                    }))
+                self.compra_id.detalle_ids = lineas
+            else:
+                self.update({
+                    'producto': '',
+                    'cantidad': 1,
+                    'costo_estimado': 0.0,
+                })
+                self.compra_id.detalle_ids = [(5, 0, 0)]  # Limpiar las líneas de detalles si no hay detalles en la requisición

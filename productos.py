@@ -19,7 +19,7 @@ class Productos(models.Model):
     tipo_producto = fields.Selection(TIPO_PRODUCTO, string='Tipo de Producto')
     valor_actual = fields.Float(string='Valor Actual')
     activo = fields.Boolean(string='Activo')
-    estatus = fields.Char(string='Estatus')
+    estatus = fields.Char(string='Estado')
     anos_vida_util = fields.Integer(string='Años de Vida Útil')
     observaciones = fields.Text(string='Observaciones')
     descripcion = fields.Text(string='Descripción')

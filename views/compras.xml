@@ -13,9 +13,12 @@
                     <field name="proveedor_id"/>
                     <field name="status" widget="statusbar"/>
                     <field name="total"/>
+                    <field name="totalr"/>
                 </tree>
             </field>
         </record>
+
+        
 
         <!-- Vista tipo form del modelo materiales.compras -->
         <record model="ir.ui.view" id="materiales_compras_form">
@@ -25,10 +28,12 @@
             <field name="arch" type="xml">
                 <form string="Compras">
                     <header>
-                        <field name="status" widget="statusbar"/>
-                        <button name="action_confirm" type="object" string="Confirmar compra" status="creado" class="oe_highlight"/>
-                        <!-- <button name="action_receive" type="object" string="Recibir" status="pedido" class="oe_highlight"/> -->
-                        <button name="action_cancel" type="object" string="Cancelar" status="creado,pedido,recibido" class="oe_highlight"/>
+                        <row>
+                            <field name="status" widget="statusbar"/>
+                            <button name="action_confirm" type="object" string="Confirmar compra" status="creado" class="oe_highlight"/>
+                            <!-- <button name="action_receive" type="object" string="Recibir" status="pedido" class="oe_highlight"/> -->
+                            <button name="action_cancel" type="object" string="Cancelar" status="creado,pedido,recibido" class="oe_highlight"/>
+                        </row>
                     </header>
                     <sheet>
                         <group string="Información de Compra">

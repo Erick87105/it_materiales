@@ -1003,3 +1003,44 @@ PS C:\Users\52453\Documents\it_materiales> docker cp ../it_materiales 46fab124aa
 Successfully copied 179kB to 46fab124aaf9:/mnt/extra-addons/.
 PS C:\Users\52453\Documents\it_materiales> docker restart odoo
 odoo
+
+
+        <!-- Vista tipo form del modelo materiales.compras -->
+        <record model="ir.ui.view" id="materiales_compras_form">
+            <field name="name">materiales.compras.form</field>
+            <field name="model">materiales.comprados</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Compras">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                        <button name="action_confirm" type="object" string="Confirmar compra" status="creado" class="oe_highlight"/>
+                        <!-- <button name="action_receive" type="object" string="Recibir" status="pedido" class="oe_highlight"/> -->
+                        <button name="action_cancel" type="object" string="Cancelar" status="creado,pedido,recibido" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group string="Información de Compra">
+                            <field name="name"/> 
+                            <field name="fecha"/>
+                            <field name="proveedor_id"/>
+                            <field name="total"/>
+                            <field name="totalr"/>
+                        </group>
+                        <notebook>
+                            <page string="Detalles de Compra">
+                                <field name="detalle_ids" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name="requisicion_id"/>
+                                        <field name="producto"/>
+                                        <field name="cantidad"/>
+                                        <field name="costo_estimado"/>
+                                        <field name="costo_real"/>
+                                        <field name="factura"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>

@@ -12,8 +12,9 @@ class Recepcion(models.Model):
     ]
     
     name = fields.Char(string='Folio', readonly=True)  # Folio de recepción
-    fecha = fields.Date(string='Fecha', default=fields.Date.context_today, readonly=True)  # Fecha de recepción
-    status = fields.Selection(STATUS_SELECTION, string='Estatus', default='creado')  # Estado de la recepción
+    #fecha = fields.Date(string='Fecha', default=fields.Date.context_today, readonly=True)  # Fecha de recepción
+    fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)
+    status = fields.Selection(STATUS_SELECTION, string='Estado', default='creado')  # Estado de la recepción
     observaciones = fields.Text(string='Observaciones')  # Observaciones de la recepción
     ubicacion_recepcion = fields.Selection(
         [('bodega', 'Bodega Materiales'), ('otros', 'Otros')],
