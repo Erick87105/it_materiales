@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Vista tree para el modelo lista.verificacion -->
+        <record id="view_lista_verificacion_tree" model="ir.ui.view">
+            <field name="name">lista.verificacion.tree</field>
+            <field name="model">lista.verificacion</field>
+            <field name="arch" type="xml">
+                <tree string="Lista de Verificación">
+                    <field name="name"/>
+                    <field name="area_verificacion"/>
+                    <field name="jefe_area"/>
+                    <field name="fecha"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista form para el modelo lista.verificacion -->
+        <record id="view_lista_verificacion_form" model="ir.ui.view">
+            <field name="name">lista.verificacion.form</field>
+            <field name="model">lista.verificacion</field>
+            <field name="arch" type="xml">
+                <form string="Lista de verificación">
+                    <sheet>
+                        <group string="Lista de verificación de infraestructura y equipo">
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="jefe_area"/>
+                                <field name="area_verificacion"/>
+                            </group>
+                            <group>
+                                <field name="fecha" readonly="1"/>
+                                <field name="trabajador_area"/>
+                                <field name="jefe_area_verificada"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Verificación de infraestructura y equipo">
+                                <field name="detalle_ids">
+                                    <tree editable="bottom" string="Detalles">
+                                        <field name="elemento_revisado"/>
+                                        <field name="hallazgo"/>
+                                        <field name="atendido"/>
+                                    </tree>
+                                    <form string="Detalle de Verificación">
+                                        <group>
+                                            <field name="elemento_revisado"/>
+                                            <field name="hallazgo"/>
+                                            <field name="atendido"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vista search para el modelo lista.verificacion -->
+        <record id="view_lista_verificacion_search" model="ir.ui.view">
+            <field name="name">lista.verificacion.search</field>
+            <field name="model">lista.verificacion</field>
+            <field name="arch" type="xml">
+                <search string="Buscar en Lista de Verificación">
+                    <field name="name"/>
+                    <field name="area_verificacion"/>
+                    <field name="jefe_area"/>
+                    <field name="fecha"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Acción para abrir las vistas tree y form -->
+        <record id="action_lista_verificacion" model="ir.actions.act_window">
+            <field name="name">Listas de Verificación</field>
+            <field name="res_model">lista.verificacion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_lista_verificacion_tree"/>
+            <field name="search_view_id" ref="view_lista_verificacion_search"/>
+        </record>
+
+        <!-- Menú para acceder a las vistas -->
+        <menuitem id="menu_lista_verificacion_root" name="Listas de Verificación"/>
+        <menuitem id="menu_lista_verificacion" name="Listas de Verificación" parent="menu_lista_verificacion_root" action="action_lista_verificacion"/>
+    </data>
+</openerp>

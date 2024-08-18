@@ -17,7 +17,6 @@
                 </tree>
             </field>
         </record>
-        
 
         <record model="ir.ui.view" id="materiales_compras_form">
             <field name="name">materiales.compras.form</field>
@@ -26,14 +25,15 @@
             <field name="arch" type="xml">
                 <form string="Compras">
                     <header>
+                        
                         <button name="action_confirm" type="object" string="Confirmar compra" class="oe_highlight"/>
-                        <!-- <button name="action_receive" type="object" string="Recibir" class="oe_highlight"/> -->
-                        <button name="action_cancel" type="object" string="Cancelar" class="oe_highlight"/>
-                        <button name="copy_requisiciones_to_detalle" type="object" string="Copiar detalles de requisiciones" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" string="Cancelar" class="oe_highlight"/>                        
+                        <!-- <button name="action_cancel" type="object" string="Cancelar" class="oe_highlight"/> -->
+                        <button name="copy_requisiciones_to_detalle" type="object" string="Agregar Productos" class="oe_highlight"/>
                         <field name="status" widget="statusbar" statusbar_visible="creado,pedido,recibido,cancelado"/>
                     </header>
                     <sheet>
-                        <group string="Información de Compra" >
+                        <group string="Información de Compra">
                             <group>
                                 <field name="name"/>
                                 <field name="proveedor_id"/>
@@ -41,18 +41,31 @@
                             </group>
                             <group>
                                 <field name="fecha"/>
-                                <field name="requisicion_ids" widget="many2many_tags"/>
+                                <field name="requisicion_id"/>
                                 <field name="totalr" readonly="1"/>
                             </group>
                         </group>
                         <notebook>
+                            <page string="Detalles de Requisiciones">
+                                <field name="requisiciones_det" nolabel="1" domain="[('req_id','=', requisicion_id)]" options ="{'no_create': True}">
+                                    <tree>
+                                        <field name="req_id"/>
+                                        <field name="producto_id"/>
+                                        <field name="cantidad"/>
+                                        <field name="costo"/>
+                                        <field name="importe"/>
+                                        <field name="importe_real"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Detalles de Compra">
                                 <field name="compra_detalle_ids">
                                     <tree editable="bottom">
                                         <field name="req_id"/>
                                         <field name="producto"/>
                                         <field name="cantidad"/>
-                                        <field name="costo_estimado"/>
+                                        <field name="costo"/>
+                                        <field name="importe"/>
                                         <field name="importe_real"/>
                                     </tree>
                                     <form>
@@ -60,19 +73,18 @@
                                             <field name="req_id"/>
                                             <field name="producto"/>
                                             <field name="cantidad"/>
-                                            <field name="costo_estimado"/>
+                                            <field name="costo"/>
+                                            <field name="importe"/>
                                             <field name="importe_real"/>
                                         </group>
                                     </form>
                                 </field>
                             </page>
-                            
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-
         <!-- Vista de búsqueda del modelo materiales.compras -->
         <record model="ir.ui.view" id="materiales_compras_search">
             <field name="name">materiales.compras.search</field>

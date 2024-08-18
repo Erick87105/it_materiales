@@ -36,6 +36,7 @@ class ItsAPlaneacionRequisiciones(models.Model):
 class ItsAPlaneacionRequisicionesDet(models.Model):
     _name = 'itsa.planeacion.requisiciones_det'
 	
+    
     req_id = fields.Many2one('itsa.planeacion.requisiciones', string='Ref. Req', ondelete='cascade')
     cantidad = fields.Integer(string='Cantidad')
     producto_id = fields.Char(string='Descripción del bien o servicio')

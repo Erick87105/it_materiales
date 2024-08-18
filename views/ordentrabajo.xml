@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Vista tree para la orden de trabajo -->
+        <record id="view_materiales_orden_trabajo_tree" model="ir.ui.view">
+            <field name="name">materiales.orden.trabajo.tree</field>
+            <field name="model">materiales.orden.trabajo</field>
+            <field name="arch" type="xml">
+                <tree string="Orden de Trabajo de Mantenimiento en Materiales">
+                    <field name="name"/>
+                    <field name="fecha"/>
+                    <field name="tipo_mantenimiento"/>
+                    <field name="tipo_servicio"/>
+                    <field name="fecha_realizacion"/>
+                    <field name="asignado_a"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista form para la orden de trabajo -->
+        <record id="view_materiales_orden_trabajo_form" model="ir.ui.view">
+            <field name="name">materiales.orden.trabajo.form</field>
+            <field name="model">materiales.orden.trabajo</field>
+            <field name="arch" type="xml">
+                <form string="Orden de Trabajo de Mantenimiento en Materiales">
+                    <header>
+                        <field name="name" readonly="1"/>
+                        <button string="Guardar" type="object" class="btn-primary"/>
+                        <button string="Cancelar" type="object" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="fecha"/>
+                                <field name="tipo_mantenimiento"/>
+                                <field name="tipo_servicio"/>
+                                <field name="asignado_a"/>
+                            </group>
+                            <group>
+                                <field name="fecha_realizacion"/>
+                                <field name="residuos_generados"/>
+                                <field name="disposicion_residuos"/>
+                                <field name="proteccionpersonal" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Liberación">
+                                <group>
+                                    <field name="verificado_por"/>
+                                    <field name="fecha_liberacion"/>
+                                    <field name="aprobado_por"/>
+                                    <field name="fecha_aprobacion"/>
+                                </group>
+                            </page>
+                            <page string="Detalles del Trabajo">
+                                <group>
+                                    <field name="descripcion_trabajo"/>
+                                    <field name="materiales_utilizados"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vista search para la orden de trabajo -->
+        <record id="view_materiales_orden_trabajo_search" model="ir.ui.view">
+            <field name="name">materiales.orden.trabajo.search</field>
+            <field name="model">materiales.orden.trabajo</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Orden de Trabajo de Mantenimiento en Materiales">
+                    <field name="name"/>
+                    <field name="fecha"/>
+                    <field name="tipo_mantenimiento"/>
+                    <field name="tipo_servicio"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Acción para abrir las vistas tree y form -->
+        <record id="action_materiales_orden_trabajo" model="ir.actions.act_window">
+            <field name="name">Orden de Trabajo de Mantenimiento en Materiales</field>
+            <field name="res_model">materiales.orden.trabajo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_materiales_orden_trabajo_tree"/>
+        </record>
+
+        <!-- Menú para acceder a las órdenes de trabajo de mantenimiento -->
+        <menuitem id="menu_materiales_orden_trabajo" name="Orden de Trabajo" parent="menu_materiales_mantenimiento" action="action_materiales_orden_trabajo" sequence="10"/>
+    </data>
+</openerp>

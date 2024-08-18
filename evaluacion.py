@@ -55,3 +55,6 @@ class Evaluacion(models.Model):
     criterio_10 = fields.Selection([
         ('mala', 'Mala'), ('regular', 'Regular'), ('buena', 'Buena'), ('excelente', 'Excelente')
     ], string='10. Muestra respeto a los derechos humanos y la no discriminación.')
+    
+    evaluacion_obtenida= fields.Char(string='EVALUACIÓN OBTENIDA ', required=True)
+    comentarios= fields.Text(string='COMENTARIOS ')

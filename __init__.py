@@ -10,5 +10,10 @@ import compras
 import recepcion
 import listaprecios
 import catalogoproductos
-#import entregaproductos
-import requisiciones
+import entregaproductos
+import departamentos
+import movimientos
+import solicitud_mantenimiento
+import lista_verificacion
+import programa_mantenimiento
+import ordentrabajo

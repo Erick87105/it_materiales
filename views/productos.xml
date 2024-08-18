@@ -1,20 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!-- Vista tipo tree del modelo it_materiales.productos -->
+        <!-- Vista tipo tree del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_tree">
             <field name="name">materiales.productos.tree</field>
             <field name="model">materiales.productos</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="List">
+                <tree string="Productos y Servicios">
+                    <field name="clave" />
                     <field name="name" />
                     <field name="marca" />
                     <field name="modelo" />
                     <field name="serie" />
+                    <field name="categoria"/>
+                    <field name="subcategoria"/>
+                    <field name="cantidad"/>
+                    <field name="valor_actual"/>
+                    <field name="valor_depreciado"/>
+                    <field name="anos_vida_util"/>
+                    <field name="depreciacion_anual"/>
                 </tree>
             </field>
         </record>
 
+        <!-- Vista tipo form del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_form">
             <field name="name">materiales.productos.form</field>
             <field name="model">materiales.productos</field>
@@ -22,24 +32,37 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group string="Datos del Producto" colspan="2">
+                        <group string="Datos del Producto o Servicio" colspan="2">
                             <group col="2">
                                 <group>
-                                    <field name="foto" widget="image" class='oe_avatar' placeholder="Imagen del Producto" />
-                                    <field name="name" placeholder="Nombre del Producto" />
+                                    <field name="foto" widget="image" class='oe_avatar' placeholder="Imagen del Producto o Servicio" />
+                                    <field name="name" placeholder="Nombre del Producto o Servicio" />
                                     <field name="marca" placeholder="Marca" />
                                     <field name="modelo" placeholder="Modelo" />
                                     <field name="serie" placeholder="Identificación de Serie" />
                                     <field name="descripcion"/>
                                 </group>
                                 <group>
-                                    <field name="tipo_producto"/>
+                                    <field name="clave" />
+                                    <field name="categoria" />
+                                    <field name="subcategoria" 
+                                           domain="[('subcategoria', 'in', 
+                                               categoria == 'inmuebles' and ['viviendas', 'edificios', 'infraestructura', 'otros_inmuebles'] or
+                                               categoria == 'muebles' and ['muebles_oficina', 'muebles_excepcion', 'computo', 'otros_muebles', 'educacional', 'audiovisuales', 'deportivos', 'fotografia_video'] or
+                                               categoria == 'medico' and ['equipo_medico', 'instrumental_medico'] or
+                                               categoria == 'transporte' and ['automoviles', 'carrocerias', 'aeroespacial', 'ferroviario', 'embarcaciones', 'otros_transporte'] or
+                                               categoria == 'maquinaria' and ['agropecuario', 'industrial', 'construccion', 'aire_acondicionado', 'telecomunicacion', 'electrico', 'herramientas', 'otros_equipos'] or
+                                               categoria == 'biologicos' and ['bovinos', 'porcinos', 'aves', 'ovinos_caprinos', 'peces', 'equinos', 'zoologico', 'arboles_plantas', 'otros_biologicos'] or
+                                               categoria == 'servicios' and ['mantenimiento_infraestructura', 'consultoria_academica', 'soporte_tecnico', 'capacitacion', 'limpieza', 'seguridad', 'administrativos']
+                                           )]"/>
+                                    <field name="cantidad" />
                                     <field name="valor_actual"/>
+                                    <field name="valor_depreciado"/>
+                                    <field name="anos_vida_util"/>
+                                    <field name="depreciacion_anual"/>
                                     <field name="activo"/>
                                     <field name="estatus"/>
-                                    <field name="anos_vida_util"/>
                                     <field name="observaciones"/>
-                                    
                                 </group>
                             </group>
                         </group>
@@ -48,7 +71,7 @@
             </field>
         </record>
         
-        <!-- Vista de búsqueda del modelo it_materiales.productos -->
+        <!-- Vista de búsqueda del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_search">
             <field name="name">materiales.productos.search</field>
             <field name="model">materiales.productos</field>
@@ -58,15 +81,19 @@
                     <field name="marca" />
                     <field name="modelo" />
                     <field name="serie" />
+                    <field name="categoria"/>
+                    <field name="subcategoria"/>
                 </search>
             </field>
         </record>
 
-        <!-- Acción para el modelo it_materiales.productos -->
+        <!-- Acción para el modelo materiales.productos -->
         <record id="materiales_productos_action" model="ir.actions.act_window">
-            <field name="name">Productos</field>
+            <field name="name">Productos y Servicios</field>
             <field name="res_model">materiales.productos</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <!-- Menú para el modelo materiales.productos -->
     </data>
 </openerp>

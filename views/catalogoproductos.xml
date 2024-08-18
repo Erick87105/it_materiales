@@ -17,11 +17,13 @@
         </record>
 
 
+        
+
         <!-- Acción para el modelo de catalogo.productos -->
         <record id="materiales_catalogoproductos_action" model="ir.actions.act_window">
             <field name="name">Catálogo de Productos</field>
             <field name="res_model">catalogo.productos</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
         </record>
     </data>
 </openerp>
