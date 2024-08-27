@@ -1,10 +1,10 @@
 {
     'name': 'it_materiales',
     'version': '1.0',
-    'category': 'Academica',
-    'description': 'Modulo materiales',
+    'category': 'Administración de Infraestructura y Servicios',
+    'description': '"Módulo SIIT para el departamento de materiales del ITSA"',
     'author': 'EDUARDO MORENO MARTINEZ',
-    'maintainer': 'Yo',
+    'maintainer': 'I.S.C Javier Cisneros Lucatero ',
     'website': 'http://www.itsa.edu.mx',
     'depends': ['base', 'it_poa'],
     'data': [

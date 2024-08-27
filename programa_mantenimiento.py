@@ -17,9 +17,9 @@ class ProgramaMantenimiento(models.Model):
         return year_list
 
     ano = fields.Selection(selection=get_years(), string='Año', required=True)
-    elaborado_por = fields.Char(string='Elaborado por', required=True)
-    aprobado_por = fields.Char(string='Aprobado por', required=True)
-    fecha_elaboracion= fields.Datetime(string='Fecha de Elaboración', default=fields.Datetime.now, readonly=True) 
+    elaborado_por = fields.Many2one('res.users','Elaborado por', required=True)
+    aprobado_por = fields.Many2one('res.users', string='Aprobado por', required=True)
+    fecha_elaboracion= fields.Datetime(string='Fecha de Elaboración', default=fields.Datetime.now) 
     fecha_aprobacion = fields.Date(string='Fecha de Aprobación')
     mantenimiento_ids = fields.One2many('programa.mantenimiento.detalle', 'programa_id', string='Mantenimientos')
 
@@ -38,7 +38,7 @@ class ProgramaMantenimientoDetalle(models.Model):
         required=True
     )
     status = fields.Selection(
-        [('r', 'R'), ('p', 'P')],
+        [('r', 'R'), ('p', 'P'), ('o', 'O')],
         string='MTTO',
         required=True
     )
@@ -56,7 +56,7 @@ class ProgramaMantenimientoDetalle(models.Model):
     dic = fields.Boolean(string='DI')
     
     status = fields.Selection(
-        [('r', 'R'), ('p', 'P')],
+        [('r', 'R'), ('p', 'P'), ('o', 'O')],
         string='MTTO',
         required=True
     )

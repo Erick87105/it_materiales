@@ -14,7 +14,7 @@
                     <field name="area_solicitante"/>
                     <field name="fecha_solicitud"/>
                     <field name="nombre_solicitante"/>
-                    <field name="status"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -26,10 +26,13 @@
             <field name="arch" type="xml">
                 <form string="Solicitud de mantenimiento correctivo">
                     <header>
-                        <field name="status" widget="statusbar" statusbar_visible="creado,recibido,cancelado"/>
+                        <!-- Botones para cambiar de estado -->
+                        <button name="action_recibir" string="Recibir" type="object" states="creado" class="oe_highlight"/>
+                        <button name="action_cancelar" string="Cancelar" type="object" states="recibido" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="creado,recibido,cancelado" statusbar_colors="creado:blue;verificado:orange;aplicado:green"/>
                     </header>
                     <sheet>
-                        <group>
+                        <group string="Solicitud de mantenimiento correctivo">
                             <group>
                                 <field name="name" readonly="1"/>
                                 <field name="fecha_solicitud" readonly="1"/>

@@ -6,12 +6,23 @@ class SolicitudMantenimiento(models.Model):
     _name = 'solicitud.mantenimiento'
     _description = 'Solicitud de Mantenimiento Correctivo'
 
-    STATUS_SELECTION = [
+    # Campo para los estados
+    state = fields.Selection([
         ('creado', 'Creado'),
         ('recibido', 'Recibido'),
-        ('cancelado', 'Cancelado'),
-    ]
+        ('cancelado', 'Cancelado')
+    ], string='Estado', default='creado')
 
+    @api.multi
+    def action_recibir(self):
+        """Método para cambiar el estado a 'Recibido'"""
+        self.state = 'recibido'
+
+    @api.multi
+    def action_cancelar(self):
+        """Método para cambiar el estado a 'Cancelado'"""
+        self.state = 'cancelado'
+        
     name = fields.Char(string='Folio', readonly=True)
     tipo_mantenimiento = fields.Many2one('tipo.mantenimiento', string='Tipo de mantenimiento', required=True)
     area_solicitante = fields.Many2one('area.solicitante', string='Área solicitante', required=True)
@@ -19,8 +30,6 @@ class SolicitudMantenimiento(models.Model):
      
     nombre_solicitante = fields.Many2one('res.users', string='Nombre del solicitante', required=True)
     descripcion = fields.Text()
-    status = fields.Selection(STATUS_SELECTION, string='Estado', default='creado')
-
 
     @api.model
     def create(self,vals):

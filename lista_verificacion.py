@@ -23,6 +23,23 @@ class ListaVerificacion(models.Model):
         # Remover caracteres no válidos
         value = re.sub(r'[^\x20-\x7E]+', '', value)
         return value
+    
+    # Campo para los estados
+    state = fields.Selection([
+        ('creado', 'Creado'),
+        ('verificado', 'Verificado'),
+        ('aplicado', 'Aplicado')
+    ], string='Estado', default='creado')
+
+    @api.multi
+    def action_verificar(self):
+        """Método para cambiar el estado a 'Verificado'"""
+        self.state = 'verificado'
+
+    @api.multi
+    def action_aplicar(self):
+        """Método para cambiar el estado a 'Aplicado'"""
+        self.state = 'aplicado'
 
 class ListaVerificacionDetalle(models.Model):
     _name = 'lista.verificacion.detalle'

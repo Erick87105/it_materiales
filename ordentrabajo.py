@@ -17,14 +17,17 @@ class MaterialesOrdenTrabajo(models.Model):
    # name = fields.Char(string='Folio', readonly=True, default=lambda self: self.env['ir.sequence'].next_by_code('materiales.orden.trabajo'))
     fecha = fields.Date(string='Fecha', required=True, default=fields.Date.context_today)
     
-    tipo_mantenimiento = fields.Selection([
+    tipo_mantenimiento_i_e = fields.Selection([
         ('interno', 'Interno'),
         ('externo', 'Externo')
-    ], string='Tipo de mantenimiento a realizar', required=True)
+    ], string='Tipo de mantenimiento (I/E)', required=True)
     
-    tipo_servicio = fields.Selection([
+    tipo_mantenimiento_p_c = fields.Selection([
         ('preventivo', 'Preventivo'),
         ('correctivo', 'Correctivo'),
+    ], string='Tipo de mantenimiento (P/C)', required=True)
+    
+    tipo_servicio = fields.Selection([
         ('herreria', 'Herrería'),
         ('electricidad', 'Electricidad'),
         ('plomeria', 'Plomería'),
@@ -35,7 +38,7 @@ class MaterialesOrdenTrabajo(models.Model):
     asignado_a = fields.Many2one('res.users', string='Asignado a', required=True)
     fecha_realizacion = fields.Date(string='Fecha de realización')
     
-    proteccionpersonal = fields.Many2many('materiales.equipo.proteccionp', string='Equipo de protección personal')
+    e_p_p_ids = fields.Many2one('materiales.orden.equipo.proteccion', string='Equipo de protección personal')
     
     residuos_generados = fields.Selection([
         ('rsu', 'RSU'),
@@ -53,9 +56,27 @@ class MaterialesOrdenTrabajo(models.Model):
     fecha_liberacion = fields.Date(string='Fecha liberación')
     aprobado_por = fields.Many2one('res.users', string='Aprobado por')
     fecha_aprobacion = fields.Date(string='Fecha aprobación')
+    
+    # Campo para los estados
+    state = fields.Selection([
+        ('creado', 'Creado'),
+        ('verificado', 'Verificado'),
+        ('aplicado', 'Aplicado')
+    ], string='Estado', default='creado')
 
-class MaterialesEquipoProteccion(models.Model):
-    _name = 'materiales.equipo.proteccion.personal'
-    _description = 'Equipo de Protección Personal en Materiales'
+    @api.multi
+    def action_verificar(self):
+        """Método para cambiar el estado a 'Verificado'"""
+        self.state = 'verificado'
 
-    nombre = fields.Char(string='Nombre', required=True)
+    @api.multi
+    def action_aplicar(self):
+        """Método para cambiar el estado a 'Aplicado'"""
+        self.state = 'aplicado'
+    
+    personal_protection_equipment = fields.Many2many('personal.protection.equipment', string='Equipo de protección personal')
+
+class PersonalProtectionEquipment(models.Model):
+    _name = 'personal.protection.equipment'
+    
+    name = fields.Char('Nombre del equipo', required=True)

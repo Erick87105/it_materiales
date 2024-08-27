@@ -11,6 +11,7 @@
                     <field name="area_verificacion"/>
                     <field name="jefe_area"/>
                     <field name="fecha"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -21,6 +22,12 @@
             <field name="model">lista.verificacion</field>
             <field name="arch" type="xml">
                 <form string="Lista de verificación">
+                    <header >
+                        <!-- Botones para cambiar de estado -->
+                        <button name="action_verificar" string="Verificar" type="object" states="creado" class="oe_highlight"/>
+                        <button name="action_aplicar" string="Aplicar" type="object" states="verificado" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="creado,verificado,aplicado" statusbar_colors="creado:blue;verificado:orange;aplicado:green"/>
+                    </header>
                     <sheet>
                         <group string="Lista de verificación de infraestructura y equipo">
                             <group>
