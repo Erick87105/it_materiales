@@ -1,7 +1,9 @@
+
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
 from openerp.exceptions import ValidationError
 from datetime import datetime
+import difflib  # Necesario para la búsqueda de similitud
 
 class Recepcion(models.Model):
     _name = 'materiales.recepcion'
@@ -82,11 +84,78 @@ class Recepcion(models.Model):
             }))
         self.env['materiales.factura'].create(factura_vals)
 
+    # Nuevas adiciones:
+    # @api.multi
+    # def action_validar_recepcion(self):
+    #     # Verificar cada producto en los detalles de recepción
+    #     for detalle in self.detalle_ids:
+    #         producto_existente = self.buscar_producto_similar(detalle.producto)
+            
+    #         if not producto_existente:
+    #             # Registrar un nuevo producto si no existe en el sistema
+    #             nuevo_producto = self.registrar_nuevo_producto(detalle)
+    #             self.env['materiales.productos'].create(nuevo_producto)
+    #         else:
+    #             # Producto ya existe, puedes actualizar la cantidad o cualquier otro campo aquí si es necesario.
+    #             pass
+    #     # Marcar recepción como aplicada
+    #     self.write({'status': 'aplicado'})
+    @api.multi
+    def action_validar_recepcion(self):
+        # Recorrer cada detalle de la recepción
+        for detalle in self.detalle_ids:
+            # Buscar un producto similar en la base de datos
+            producto_existente = self.buscar_producto_similar(detalle.producto)
+            
+            if not producto_existente:
+                # Si no se encuentra un producto similar, crear uno nuevo
+                nuevo_producto = self.registrar_nuevo_producto(detalle)
+                creado_producto = self.env['materiales.productos'].create(nuevo_producto)
+                if creado_producto:
+                    _logger.info('Nuevo producto creado: %s', creado_producto.name)
+            else:
+                _logger.info('Producto similar encontrado: %s', producto_existente.name)
+                # Si se encuentra un producto similar, puedes realizar alguna acción adicional aquí
+                # como actualizar cantidades, etc.
+
+        # Marcar la recepción como "aplicado" después de la validación
+        self.write({'status': 'aplicado'})
+
+    
+    def buscar_producto_similar(self, producto_nombre):
+        # Buscar productos similares en la base de datos
+        productos = self.env['materiales.productos'].search([])
+        for producto in productos:
+            similitud = difflib.SequenceMatcher(None, producto.name, producto_nombre).ratio()
+            if similitud > 0.8:  # Puedes ajustar este valor según la similitud que desees permitir
+                return producto
+        return False
+    
+    def registrar_nuevo_producto(self, detalle):
+        return {
+            'name': detalle.producto,
+            'marca': detalle.marca,
+            'modelo': detalle.modelo,
+            'serie': detalle.serie,
+            'categoria': detalle.categoria,
+            'subcategoria': detalle.subcategoria,
+            'cantidad': detalle.cantidad,
+            'valor_actual': detalle.costo_estimado,
+            'anos_vida_util': detalle.anos_vida_util,
+            'depreciacion_anual': detalle.depreciacion_anual,
+            'activo': True,
+        }
+
 class Detallerec(models.Model):
     _name = 'materiales.detallerec'
 
     recepcion_id = fields.Many2one('materiales.recepcion', string='Recepción')
     producto = fields.Char(string='Producto')
+    marca = fields.Char(string='Marca')
+    modelo = fields.Char(string='Modelo')
+    serie = fields.Char(string='Serie')
+    categoria = fields.Selection([('inmuebles', 'Inmuebles'), ('muebles', 'Muebles')], string='Categoría')
+    subcategoria = fields.Selection([('viviendas', 'Viviendas'), ('edificios', 'Edificios')], string='Subcategoría')
     cantidad = fields.Integer(string='Cantidad')
     costo_estimado = fields.Float(string='Costo Estimado')
     costo_real = fields.Float(string='Costo Real')
@@ -136,4 +205,3 @@ class DetalleFactura(models.Model):
     def _compute_subtotal(self):
         for record in self:
             record.subtotal = record.cantidad * record.precio_unitario
-
