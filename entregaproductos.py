@@ -17,8 +17,8 @@ class Entregaproductos(models.Model):
     ]
     status = fields.Selection(STATUS_SELECTION, string='Estado', default='creado')  # Estado de la entrega
     name = fields.Char(string='Folio', readonly=True)
-    compra_id = fields.Many2one('materiales.comprados', string='Compra', required=True )
-    responsable = fields.Char(string='Responsable de resguardo')
+    compra_id = fields.Many2one('materiales.comprados', string='Compra',domain="[('status', '=', 'recibido')]", required=True )
+    responsable = fields.Char(string='Responsable de resguardo', compute='_compute_responsable', store=True)    
     fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)
     departamento_id = fields.Many2one('itsa.base.deptos', string='Departamento de asignacion')
     ubicacion = fields.Char(string='Ubicación origen', default='Bodega materiales')
@@ -40,20 +40,36 @@ class Entregaproductos(models.Model):
             self.responsable = self.departamento_id.jefe.name
         else:
             self.responsable = ''
-
-    @api.model
-    def create(self, vals):
-        if 'departamento_id' in vals:
-            departamento = self.env['materiales.departamento'].browse(vals['departamento_id'])
-            vals['responsable'] = departamento.titular if departamento else ''
-        return super(Entregaproductos, self).create(vals)
+            
+    @api.depends('departamento_id')
+    def _compute_responsable(self):
+        for record in self:
+            if record.departamento_id:
+                jefe_name = record.departamento_id.jefe.name
+                # Actualizamos el valor de responsable sin disparar el write
+                record.update({'responsable': jefe_name})
+            else:
+                record.update({'responsable': ''})
 
     @api.multi
     def write(self, vals):
-        if 'departamento_id' in vals:
-            departamento = self.env['materiales.departamento'].browse(vals['departamento_id'])
-            vals['responsable'] = departamento.titular if departamento else ''
+        # Evitar que se compute el responsable al escribir si ya está presente en los valores
+        if 'responsable' not in vals:
+            self._compute_responsable()
         return super(Entregaproductos, self).write(vals)
+
+    
+    @api.model
+    def create(self, vals):
+        record = super(Entregaproductos, self).create(vals)
+        record._compute_responsable()
+        return record
+
+    # @api.multi
+    # def write(self, vals):
+    #     result = super(Entregaproductos, self).write(vals)
+    #     self._compute_responsable()
+    #     return result
             
     @api.model
     def create(self, vals):
@@ -77,7 +93,18 @@ class Detalleentrega(models.Model):
     edificio = fields.Char(string='Edificio')
     area = fields.Char(string='Área')
     cantidad = fields.Selection(selection='_get_rango_cantidad', string='Cantidad')
-
+    
+    @api.onchange('ubicacion_id')
+    def _onchange_ubicacion_id(self):
+        if self.ubicacion_id:
+            self.ubicacion_destino = self.ubicacion_id.Departamento
+            self.edificio = self.ubicacion_id.Edificio
+            self.area = self.ubicacion_id.Area
+        else:
+            self.ubicacion_destino = ''
+            self.edificio = ''
+            self.area = ''
+    
     @api.model
     def _get_rango_cantidad(self):
         # Este método genera una lista de tuplas con números del 1 al 20

@@ -33,7 +33,7 @@
                             <button name="action_cancelar" type="object" string="Cancelar Entrega" class="oe_highlight" status="creado"/>
                         </row>
                     </header>
-                    <h1 style="font-size:20px;color:#0000FF">Entrega de productos</h1>
+                    <h1 style="font-size:20px;color:#33CC33">Entrega de productos de requisición</h1>
                     <sheet>
                         <group>
                             <group>
@@ -45,7 +45,7 @@
                             <group>
                                 <field name="fecha" readonly="1"/>
                                 <field name="departamento_id"/>
-                                <field name="ubicacion" readonly="1"/>
+                                <field name="ubicacion"/>
                             </group>
                         </group>
                         <notebook>

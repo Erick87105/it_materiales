@@ -7,7 +7,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="ubicaciones" editable = "bottom">
-                    <field name="Clave"/>
+                    <field name="name"/>
                     <field name="Departamento"/>
                     <field name="Edificio"/> 
                     <field name="Area"/>
@@ -23,7 +23,7 @@
             <field name="model">materiales.ubicaciones</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="Clave"/>
+                    <field name="name"/>
                 </search>
             </field>
         </record>
