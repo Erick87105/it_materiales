@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
 
+class Departamentos(models.Model):
+    _inherit = 'itsa.base.deptos'
+
+class itsa_rh_empleados(models.Model):
+    _inherit = 'itsa.rh.empleados'
+
 class Entregaproductos(models.Model):
     _name = 'materiales.entregaproductos'
     
@@ -14,8 +20,8 @@ class Entregaproductos(models.Model):
     compra_id = fields.Many2one('materiales.comprados', string='Compra', required=True )
     responsable = fields.Char(string='Responsable de resguardo')
     fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)
-    departamento_id = fields.Many2one('materiales.departamento', string='Departamento de asignacion')
-    ubicacion = fields.Char(string='Ubicación', default='Bodega materiales', readonly=True)
+    departamento_id = fields.Many2one('itsa.base.deptos', string='Departamento de asignacion')
+    ubicacion = fields.Char(string='Ubicación origen', default='Bodega materiales')
     detalle_ids = fields.One2many('materiales.detalleentrega', 'entregaproductos_id', string='Detalle recepción')
     
     @api.multi
@@ -31,7 +37,7 @@ class Entregaproductos(models.Model):
     @api.onchange('departamento_id')
     def _onchange_departamento_id(self):
         if self.departamento_id:
-            self.responsable = self.departamento_id.titular
+            self.responsable = self.departamento_id.jefe.name
         else:
             self.responsable = ''
 

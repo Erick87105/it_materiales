@@ -6,7 +6,7 @@
     'author': 'EDUARDO MORENO MARTINEZ',
     'maintainer': 'I.S.C Javier Cisneros Lucatero ',
     'website': 'http://www.itsa.edu.mx',
-    'depends': ['base', 'it_poa'],
+    'depends': ['base', 'it_poa', 'it_base'],
     'data': [
         'views/parametros.xml',
         'views/ubicaciones.xml',

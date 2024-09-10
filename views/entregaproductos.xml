@@ -33,6 +33,7 @@
                             <button name="action_cancelar" type="object" string="Cancelar Entrega" class="oe_highlight" status="creado"/>
                         </row>
                     </header>
+                    <h1 style="font-size:20px;color:#0000FF">Entrega de productos</h1>
                     <sheet>
                         <group>
                             <group>
