@@ -1,9 +1,13 @@
 
+#no me guarda la depreciacion ni el total real arreglar la factura tambien para que trabaje en conjunto
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
 from openerp.exceptions import ValidationError
 from datetime import datetime
 import difflib  # Necesario para la búsqueda de similitud
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Recepcion(models.Model):
     _name = 'materiales.recepcion'
@@ -19,10 +23,10 @@ class Recepcion(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('Foliorecepciones')
+        if 'name' not in vals:
+            vals['name'] = self.env['ir.sequence'].next_by_code('Foliorecepciones')
         return super(Recepcion, self).create(vals)
 
-    @api.multi
     def action_aplicar(self):
         self.validar_costos()
         self.validar_factura()
@@ -30,7 +34,6 @@ class Recepcion(models.Model):
         if self.compra_ids:
             self.compra_ids.write({'status': 'recibido'})
 
-    @api.multi
     def action_cancelar(self):
         self.write({'status': 'cancelado'})
 
@@ -48,19 +51,18 @@ class Recepcion(models.Model):
                     }))
             self.detalle_ids = detalle_data
 
-    @api.multi
     def validar_costos(self):
-        param_obj = self.env['materiales.parametros']
-        umbral = float(param_obj.get_param('DIFERENCIA_COSTO_PERMITIDA', '10'))
-        
-        for detalle in self.detalle_ids:
-            diferencia = abs(detalle.costo_real - detalle.costo_estimado) / detalle.costo_estimado * 100
-            if diferencia > umbral:
-                raise ValidationError(
-                    u'El costo real de {0} excede el umbral permitido de {1}%. Revise la factura o contacte al proveedor.'.format(
-                        detalle.producto, umbral))
+        param_obj = self.env['ir.config_parameter']
+        umbral = float(param_obj.sudo().get_param('DIFERENCIA_COSTO_PERMITIDA', '10'))
 
-    @api.multi
+        for detalle in self.detalle_ids:
+            if detalle.costo_estimado:
+                diferencia = abs(detalle.costo_real - detalle.costo_estimado) / detalle.costo_estimado * 100
+                if diferencia > umbral:
+                    raise ValidationError(
+                        u'El costo real de {0} excede el umbral permitido de {1}%. Revise la factura o contacte al proveedor.'.format(
+                            detalle.producto, umbral))
+
     def validar_factura(self):
         for factura in self.factura_ids:
             total_estimado = sum(detalle.cantidad * detalle.costo_estimado for detalle in factura.recepcion_ids.mapped('detalle_ids'))
@@ -68,7 +70,6 @@ class Recepcion(models.Model):
                 raise ValidationError(
                     u'El monto total de la factura excede el 110% del costo estimado. Verifique los datos antes de continuar.')
 
-    @api.multi
     def crear_factura(self):
         factura_vals = {
             'numero_factura': 'Folio por Definir',
@@ -84,67 +85,73 @@ class Recepcion(models.Model):
             }))
         self.env['materiales.factura'].create(factura_vals)
 
-    # Nuevas adiciones:
-    # @api.multi
-    # def action_validar_recepcion(self):
-    #     # Verificar cada producto en los detalles de recepción
-    #     for detalle in self.detalle_ids:
-    #         producto_existente = self.buscar_producto_similar(detalle.producto)
-            
-    #         if not producto_existente:
-    #             # Registrar un nuevo producto si no existe en el sistema
-    #             nuevo_producto = self.registrar_nuevo_producto(detalle)
-    #             self.env['materiales.productos'].create(nuevo_producto)
-    #         else:
-    #             # Producto ya existe, puedes actualizar la cantidad o cualquier otro campo aquí si es necesario.
-    #             pass
-    #     # Marcar recepción como aplicada
-    #     self.write({'status': 'aplicado'})
     @api.multi
     def action_validar_recepcion(self):
-        # Recorrer cada detalle de la recepción
+        # Verificar cada producto en los detalles de recepción
         for detalle in self.detalle_ids:
-            # Buscar un producto similar en la base de datos
             producto_existente = self.buscar_producto_similar(detalle.producto)
             
             if not producto_existente:
-                # Si no se encuentra un producto similar, crear uno nuevo
+                # Registrar un nuevo producto si no existe en el sistema
                 nuevo_producto = self.registrar_nuevo_producto(detalle)
-                creado_producto = self.env['materiales.productos'].create(nuevo_producto)
-                if creado_producto:
+                try:
+                    creado_producto = self.env['materiales.productos'].create(nuevo_producto)
                     _logger.info('Nuevo producto creado: %s', creado_producto.name)
+                except Exception as e:
+                    _logger.error('Error al crear el producto: %s', e)
             else:
                 _logger.info('Producto similar encontrado: %s', producto_existente.name)
-                # Si se encuentra un producto similar, puedes realizar alguna acción adicional aquí
-                # como actualizar cantidades, etc.
 
-        # Marcar la recepción como "aplicado" después de la validación
+        # Cambiar el estado de las compras asociadas a "recibido"
+        if self.compra_ids:
+            self.compra_ids.write({'status': 'recibido'})
+        
+        # Marcar la recepción como "aplicada"
         self.write({'status': 'aplicado'})
 
-    
+        
+
     def buscar_producto_similar(self, producto_nombre):
-        # Buscar productos similares en la base de datos
         productos = self.env['materiales.productos'].search([])
         for producto in productos:
             similitud = difflib.SequenceMatcher(None, producto.name, producto_nombre).ratio()
-            if similitud > 0.8:  # Puedes ajustar este valor según la similitud que desees permitir
+            if similitud > 0.8:  # Ajustable
                 return producto
         return False
-    
+
     def registrar_nuevo_producto(self, detalle):
         return {
             'name': detalle.producto,
             'marca': detalle.marca,
             'modelo': detalle.modelo,
             'serie': detalle.serie,
-            'categoria': detalle.categoria,
-            'subcategoria': detalle.subcategoria,
+            'categoria_id': detalle.categoria_id.id,  # Asegúrate de que estos campos existan
+            'subcategoria_id': detalle.subcategoria_id.id,
             'cantidad': detalle.cantidad,
             'valor_actual': detalle.costo_estimado,
             'anos_vida_util': detalle.anos_vida_util,
             'depreciacion_anual': detalle.depreciacion_anual,
             'activo': True,
         }
+        
+class DepreciacionCategoria(models.Model):
+    _name = 'depreciacion.categoria'
+    _description = 'Categorías de Depreciación'
+
+    nombre = fields.Char(string='Nombre de la Categoría', required=True)
+    descripcion = fields.Text(string='Descripción de la Categoría')
+    subcategoria_ids = fields.One2many('depreciacion.subcategoria', 'categoria_id', string='Subcategorías')
+
+
+class DepreciacionSubcategoria(models.Model):
+    _name = 'depreciacion.subcategoria'
+    _description = 'Subcategorías de Depreciación'
+
+    nombre = fields.Char(string='Nombre de la Subcategoría', required=True)
+    descripcion = fields.Text(string='Descripción de la Subcategoría')
+    anos_vida_util = fields.Integer(string='Años de Vida Útil', required=True)
+    depreciacion_anual = fields.Float(string='Porcentaje de Depreciación Anual (%)', required=True)
+    categoria_id = fields.Many2one('depreciacion.categoria', string='Categoría', ondelete='cascade', required=True)
 
 class Detallerec(models.Model):
     _name = 'materiales.detallerec'
@@ -154,18 +161,42 @@ class Detallerec(models.Model):
     marca = fields.Char(string='Marca')
     modelo = fields.Char(string='Modelo')
     serie = fields.Char(string='Serie')
-    categoria = fields.Selection([('inmuebles', 'Inmuebles'), ('muebles', 'Muebles')], string='Categoría')
-    subcategoria = fields.Selection([('viviendas', 'Viviendas'), ('edificios', 'Edificios')], string='Subcategoría')
+
+    # Cambiar a Many2one para relacionar con el modelo de categoría
+    categoria_id = fields.Many2one('depreciacion.categoria', string='Categoría', required=True)
+
+    # Cambiar a Many2one para relacionar con el modelo de subcategoría
+    subcategoria_id = fields.Many2one('depreciacion.subcategoria', string='Subcategoría', domain="[('categoria_id', '=', categoria_id)]", required=True)
+
     cantidad = fields.Integer(string='Cantidad')
     costo_estimado = fields.Float(string='Costo Estimado')
     costo_real = fields.Float(string='Costo Real')
-    compra_id = fields.Many2one('materiales.comprados', string='Compra Asociada')
+
+    # Estos campos se llenarán automáticamente
+    anos_vida_util = fields.Integer(string='Años de Vida Útil', readonly=True)
+    depreciacion_anual = fields.Float(string='Depreciación Anual (%)', readonly=True)
+
+    # Cambiar la subcategoría cuando la categoría cambie
+    @api.onchange('categoria_id')
+    def _onchange_categoria_id(self):
+        # Limpiar la subcategoría al cambiar la categoría
+        self.subcategoria_id = False
+
+    # Actualizar los valores de depreciación según la subcategoría seleccionada
+    @api.onchange('subcategoria_id')
+    def _onchange_subcategoria_id(self):
+        if self.subcategoria_id:
+            self.anos_vida_util = self.subcategoria_id.anos_vida_util
+            self.depreciacion_anual = self.subcategoria_id.depreciacion_anual
+        else:
+            self.anos_vida_util = 0
+            self.depreciacion_anual = 0
+
 
 class Factura(models.Model):
     _name = 'materiales.factura'
 
-    recepcion_ids = fields.Many2many('materiales.recepcion', string='Recepciones', 
-                                     help="Selecciona una o más recepciones para esta factura.")
+    recepcion_ids = fields.Many2many('materiales.recepcion', string='Recepciones')
     numero_factura = fields.Char(string='Número de Factura', required=True)
     rfc = fields.Char(string='RFC')
     proveedor_id = fields.Many2one('materiales.proveedor', string='Proveedor', required=True)
@@ -187,10 +218,11 @@ class Factura(models.Model):
                     detalle_data.append((0, 0, {
                         'producto_id': detalle.producto_id.id,
                         'cantidad': detalle.cantidad,
-                        'precio_unitario': detalle.costo_real,  # Asumiendo que el costo real es el precio unitario
+                        'precio_unitario': detalle.costo_real,
                     }))
             self.detalles_factura = detalle_data
-            self._compute_monto_total()  # Asegurarse de que el monto total esté actualizado
+            self._compute_monto_total()
+
 
 class DetalleFactura(models.Model):
     _name = 'materiales.detallefactura'
