@@ -1,5 +1,4 @@
 
-#no me guarda la depreciacion ni el total real arreglar la factura tambien para que trabaje en conjunto
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
 from openerp.exceptions import ValidationError
@@ -173,24 +172,23 @@ class Detallerec(models.Model):
     costo_real = fields.Float(string='Costo Real')
 
     # Estos campos se llenarán automáticamente
-    anos_vida_util = fields.Integer(string='Años de Vida Útil', readonly=True)
-    depreciacion_anual = fields.Float(string='Depreciación Anual (%)', readonly=True)
+    anos_vida_util = fields.Integer(string='Años de Vida Útil', compute='_compute_depreciacion', store=True)
+    depreciacion_anual = fields.Float(string='Depreciación Anual (%)', compute='_compute_depreciacion', store=True)
 
-    # Cambiar la subcategoría cuando la categoría cambie
+    @api.depends('subcategoria_id')
+    def _compute_depreciacion(self):
+        for record in self:
+            if record.subcategoria_id:
+                record.anos_vida_util = record.subcategoria_id.anos_vida_util
+                record.depreciacion_anual = record.subcategoria_id.depreciacion_anual
+            else:
+                record.anos_vida_util = 0
+                record.depreciacion_anual = 0
+
     @api.onchange('categoria_id')
     def _onchange_categoria_id(self):
         # Limpiar la subcategoría al cambiar la categoría
         self.subcategoria_id = False
-
-    # Actualizar los valores de depreciación según la subcategoría seleccionada
-    @api.onchange('subcategoria_id')
-    def _onchange_subcategoria_id(self):
-        if self.subcategoria_id:
-            self.anos_vida_util = self.subcategoria_id.anos_vida_util
-            self.depreciacion_anual = self.subcategoria_id.depreciacion_anual
-        else:
-            self.anos_vida_util = 0
-            self.depreciacion_anual = 0
 
 
 class Factura(models.Model):
