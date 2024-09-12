@@ -22,9 +22,10 @@
             <field name="name">programa.mantenimiento.form</field>
             <field name="model">programa.mantenimiento</field>
             <field name="arch" type="xml" >
-                <form string="Programa de mantenimiento preventivo de infraestructura y equipo">
+                <form >
                     <sheet>
-                        <group colspan="2" string="Programa de mantenimiento preventivo de infraestructura y equipo">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Programa de Mantenimiento Preventivo de Infraestructura y Equipo</h1>
+                        <group colspan="2" >
                             <group col="2">
                                 <field name="ano"/>
                                 <field name="elaborado_por"/>

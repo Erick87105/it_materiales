@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields
 
+class Departamentos(models.Model):
+    _inherit = 'itsa.base.deptos'
+
+class itsa_rh_empleados(models.Model):
+    _inherit = 'itsa.rh.empleados'
+    
 class ProgramaMantenimiento(models.Model):
     _name = 'programa.mantenimiento'
     _description = 'Programa de Mantenimiento'

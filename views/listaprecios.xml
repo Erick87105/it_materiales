@@ -26,6 +26,7 @@
                         <button name="actualizar_precio" type="object" string="Actualizar Precio" class="oe_highlight" status="!aplicado"/>
                     </header>
                     <sheet>
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Lista de Precios</h1>
                         <group>
                             <field name="fecha" readonly="1"/>
                             <field name="proveedor_id"/>
@@ -43,11 +44,23 @@
                                     </tree>
                                 </field>
                             </page>
+                            <!-- Nueva página para el historial de precios -->
+                            <page string="Historial de Precios">
+                                <field name="precio_historial_ids" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name="producto_id"/>
+                                        <field name="precio_anterior"/>
+                                        <field name="precio_nuevo"/>
+                                        <field name="fecha_cambio"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
 
         <!-- Vista de búsqueda del modelo materiales.listaprecios -->
         <record model="ir.ui.view" id="materiales_listaprecios_search">

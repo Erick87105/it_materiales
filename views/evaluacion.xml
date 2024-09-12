@@ -26,7 +26,9 @@
             <field name="arch" type="xml">
                 <form string="Evaluación de Proveedores">
                     <sheet>
-                        <group string="Evaluación de proveedores de procesos y servicios externos">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Evaluación de Proveedores de Procesos y Servicios Externos</h1>
+
+                        <group>
                             <group>
                                 <!-- Modificar el campo para mostrar el nombre de la empresa -->
                                 <field name="proveedor_id" string="Proveedor" options='{"no_open": True}'/>

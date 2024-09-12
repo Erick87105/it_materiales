@@ -2,6 +2,12 @@
 
 from openerp import models, fields, api
 
+class Departamentos(models.Model):
+    _inherit = 'itsa.base.deptos'
+
+class itsa_rh_empleados(models.Model):
+    _inherit = 'itsa.rh.empleados'
+    
 class SolicitudMantenimiento(models.Model):
     _name = 'solicitud.mantenimiento'
     _description = 'Solicitud de Mantenimiento Correctivo'

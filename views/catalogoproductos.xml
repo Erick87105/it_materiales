@@ -16,8 +16,21 @@
             </field>
         </record>
 
-
-        
+    
+        <!-- Vista de búsqueda para el modelo catalogo.productos -->
+        <record model="ir.ui.view" id="catalogoproductos_search">
+            <field name="name">catalogoproductos.search</field>
+            <field name="model">catalogo.productos</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Buscar Catálogo de Productos">
+                    <field name="clave"/>
+                    <field name="nombre"/>
+                    <field name="precio_actual"/>
+                    <field name="categoria"/>
+                </search>
+            </field>
+        </record>
 
         <!-- Acción para el modelo de catalogo.productos -->
         <record id="materiales_catalogoproductos_action" model="ir.actions.act_window">

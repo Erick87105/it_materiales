@@ -24,6 +24,9 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    <field name="Departamento"/>
+                    <field name="Edificio"/> 
+                    <field name="Area"/>
                 </search>
             </field>
         </record>

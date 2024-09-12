@@ -22,6 +22,8 @@
                         <field name="status" widget="statusbar" statusbar_visible="creado,aplicado,cancelado"/>
                     </header>
                     <sheet>
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Recepción de Compras</h1>
+
                         <group>
                             <group>
                                 <field name="name" string="Folio" readonly="1"/>
@@ -143,6 +145,8 @@
             <field name="arch" type="xml">
                 <form string="Factura de Materiales" version="7.0">
                     <sheet>
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Facturas</h1>
+
                         <group>
                             <group>
                                 <field name="numero_factura" string="Número de Factura"/>
@@ -290,6 +294,7 @@
             <field name="arch" type="xml">
                 <form string="Detalles de Recepción">
                     <sheet>
+                        
                         <group>
                             <field name="producto"/>
                             <field name="marca"/>

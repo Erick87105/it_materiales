@@ -29,6 +29,9 @@
                 <search>
                     <field name="name"/>
                     <field name="rfc"/>
+                    <field name="representante"/>
+                    <field name="ciudad"/>
+                    <field name="telefono"/>
                 </search>
             </field>
         </record>

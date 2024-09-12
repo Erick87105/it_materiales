@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Productos y Servicios">
                     <field name="clave" />
+    
                     <field name="name" />
                     <field name="marca" />
                     <field name="modelo" />
@@ -32,11 +33,14 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group string="Datos del Producto o Servicio" colspan="2">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Productos y Servicios</h1>
+
+                        <group colspan="2">
                             <group col="2">
                                 <group>
                                     <field name="foto" widget="image" class='oe_avatar' placeholder="Imagen del Producto o Servicio" />
                                     <field name="name" placeholder="Nombre del Producto o Servicio" />
+                                    <field name="proveedor_id" placeholder="Proveedor" />
                                     <field name="marca" placeholder="Marca" />
                                     <field name="modelo" placeholder="Modelo" />
                                     <field name="serie" placeholder="Identificación de Serie" />

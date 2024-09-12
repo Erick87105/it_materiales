@@ -33,7 +33,8 @@
                         <field name="state" widget="statusbar" statusbar_visible="creado,verificado,aplicado" statusbar_colors="creado:blue;verificado:orange;aplicado:green"/>
                     </header>
                     <sheet>
-                        <group string="Orden de Trabajo de Mantenimiento">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Orden de Trabajo de Mantenimiento</h1>
+                        <group>
                             <group>
                                 <field name="fecha" readonly="1"/>
                                 <field name="tipo_mantenimiento_i_e"/>

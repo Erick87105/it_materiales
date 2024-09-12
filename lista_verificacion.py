@@ -2,6 +2,13 @@
 from openerp import models, fields, api
 import re
 
+class Departamentos(models.Model):
+    _inherit = 'itsa.base.deptos'
+
+class itsa_rh_empleados(models.Model):
+    _inherit = 'itsa.rh.empleados'
+    
+    
 class ListaVerificacion(models.Model):
     _name = 'lista.verificacion'
     _description = 'Lista de Verificación'

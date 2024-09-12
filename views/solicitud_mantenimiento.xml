@@ -32,7 +32,8 @@
                         <field name="state" widget="statusbar" statusbar_visible="creado,recibido,cancelado" statusbar_colors="creado:blue;verificado:orange;aplicado:green"/>
                     </header>
                     <sheet>
-                        <group string="Solicitud de mantenimiento correctivo">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Solicitud de Mantenimiento Correctivo</h1>
+                        <group>
                             <group>
                                 <field name="name" readonly="1"/>
                                 <field name="fecha_solicitud" readonly="1"/>

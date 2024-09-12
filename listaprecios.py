@@ -5,26 +5,49 @@ from openerp import models, fields, api
 class Listaprecios(models.Model):
     _name = 'materiales.listaprecios'
 
+    _sql_constraints = [
+        ('proveedor_uniq', 'unique(proveedor_id)', 'Ya existe una lista de precios para este proveedor.')
+    ]
+    
     fecha = fields.Date(string='Fecha', default=fields.Date.context_today, readonly=True)
     proveedor_id = fields.Many2one('materiales.proveedor', string='Proveedor', required=True)
     producto_id = fields.Many2one('materiales.productos', string='Producto')
-    aplicado = fields.Boolean(string='Aplicado', default=False)
+    aplicado = fields.Boolean(string='Aplicado', default=True)
     line_ids = fields.One2many('materiales.listaprecios.line', 'listaprecios_id', string='Detalles de Lista de Precios')
+    precio_historial_ids = fields.One2many('materiales.precio.historial', 'listaprecios_id', string='Historial de Precios')
+
+    @api.onchange('proveedor_id')
+    def _onchange_proveedor_id(self):
+        if self.proveedor_id:
+            productos = self.env['materiales.productos'].search([('proveedor_id', '=', self.proveedor_id.id)])
+            self.line_ids = [(0, 0, {
+                'producto_id': producto.id,
+                'clave': producto.clave,
+                'nombre': producto.name,
+                'precio_actual': producto.valor_actual,
+            }) for producto in productos]
+        else:
+            self.line_ids = []
 
     @api.multi
     def actualizar_precio(self):
         self.ensure_one()
         if not self.aplicado:
             for line in self.line_ids:
-                if line.nuevo_precio:
-                    line.producto_id.write({'valor_actual': line.nuevo_precio})
+                if line.nuevo_precio and line.nuevo_precio != line.precio_actual:
+                    producto = line.producto_id
+                    # Guardar el historial del cambio de precio
+                    self.env['materiales.precio.historial'].create({
+                        'producto_id': producto.id,
+                        'precio_anterior': producto.valor_actual,
+                        'precio_nuevo': line.nuevo_precio,
+                        'fecha_cambio': fields.Date.context_today(),
+                        'listaprecios_id': self.id,
+                    })
+                    # Actualizar el valor_actual del producto
+                    producto.write({'valor_actual': line.nuevo_precio})
             self.aplicado = True
             self.sync_catalogo()
-
-    @api.onchange('proveedor_id')
-    def _onchange_proveedor_id(self):
-        # Filtrar los productos basados en el proveedor seleccionado
-        return {'domain': {'producto_id': [('proveedor_id', '=', self.proveedor_id.id)]}}
 
     @api.model
     def create(self, vals):
@@ -48,14 +71,16 @@ class Listaprecios(models.Model):
                 catalogo_producto.write({
                     'nombre': producto.name,
                     'precio_actual': producto.valor_actual,
-                    'categoria': producto.tipo_producto
+                    'categoria': producto.categoria,
+                    'subcategoria': producto.subcategoria
                 })
             else:
                 catalogo_model.create({
                     'clave': producto.clave,
                     'nombre': producto.name,
                     'precio_actual': producto.valor_actual,
-                    'categoria': producto.tipo_producto
+                    'categoria': producto.categoria,
+                    'subcategoria': producto.subcategoria
                 })
 
 class Detalleprecios(models.Model):
@@ -75,7 +100,6 @@ class Detalleprecios(models.Model):
             self.nombre = self.producto_id.name
             self.precio_actual = self.producto_id.valor_actual
 
-
 class CatalogoProductos(models.Model):
     _name = 'catalogo.productos'
     _description = 'Catálogo de Productos'
@@ -85,3 +109,14 @@ class CatalogoProductos(models.Model):
     nombre = fields.Char(string='Nombre', readonly=True)
     precio_actual = fields.Float(string='Precio Actual', readonly=True)
     categoria = fields.Char(string='Categoría', readonly=True)
+    subcategoria = fields.Char(string='Subcategoría', readonly=True)
+
+class PrecioHistorial(models.Model):
+    _name = 'materiales.precio.historial'
+    _description = 'Historial de Cambios de Precio'
+
+    listaprecios_id = fields.Many2one('materiales.listaprecios', string='Lista de Precios')
+    producto_id = fields.Many2one('materiales.productos', string='Producto')
+    precio_anterior = fields.Float(string='Precio Anterior')
+    precio_nuevo = fields.Float(string='Precio Nuevo')
+    fecha_cambio = fields.Date(string='Fecha de Cambio')

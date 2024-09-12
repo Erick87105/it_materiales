@@ -8,6 +8,7 @@ class Productos(models.Model):
 
     foto = fields.Binary(string='Foto del Producto')
     clave = fields.Char(string='Clave', readonly=True)
+    proveedor_id = fields.Many2one('materiales.proveedor', string='Proveedor', required=True)
     name = fields.Char(string='Nombre del Producto o Servicio')
     marca = fields.Char(string='Marca')
     modelo = fields.Char(string='Modelo')

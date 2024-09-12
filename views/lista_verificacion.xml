@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Vista tree para el modelo lista.verificacion -->
+         <!-- Vista tree para el modelo lista.verificacion -->
         <record id="view_lista_verificacion_tree" model="ir.ui.view">
             <field name="name">lista.verificacion.tree</field>
             <field name="model">lista.verificacion</field>
@@ -22,14 +22,16 @@
             <field name="model">lista.verificacion</field>
             <field name="arch" type="xml">
                 <form string="Lista de verificación">
-                    <header >
+                    <header>
                         <!-- Botones para cambiar de estado -->
                         <button name="action_verificar" string="Verificar" type="object" states="creado" class="oe_highlight"/>
                         <button name="action_aplicar" string="Aplicar" type="object" states="verificado" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="creado,verificado,aplicado" statusbar_colors="creado:blue;verificado:orange;aplicado:green"/>
                     </header>
                     <sheet>
-                        <group string="Lista de verificación de infraestructura y equipo">
+                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Lista de Verificación de Infraestructura y Equipo</h1>
+
+                        <group>
                             <group>
                                 <field name="name" readonly="1"/>
                                 <field name="jefe_area"/>
