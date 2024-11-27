@@ -33,15 +33,9 @@ class MaterialesOrdenTrabajo(models.Model):
         ('correctivo', 'Correctivo'),
     ], string='Tipo de mantenimiento (P/C)', required=True)
     
-    tipo_servicio = fields.Selection([
-        ('herreria', 'Herrería'),
-        ('electricidad', 'Electricidad'),
-        ('plomeria', 'Plomería'),
-        ('pintura', 'Pintura'),
-        ('obra_civil', 'Obra Civil'),
-    ], string='Tipo de servicio', required=True)
+    tipo_servicio = fields.Many2one('tipo.servicio', string='Tipo de servicio', required=True)
     
-    asignado_a = fields.Many2one('res.users', string='Asignado a', required=True)
+    asignado_a = fields.Many2one('trabajadores.materiales', string='Asignado a', required=True)
     fecha_realizacion = fields.Date(string='Fecha de realización')
     
     e_p_p_ids = fields.Many2one('materiales.orden.equipo.proteccion', string='Equipo de protección personal')
@@ -58,9 +52,9 @@ class MaterialesOrdenTrabajo(models.Model):
     descripcion_trabajo = fields.Text(string='Descripción del trabajo realizado')
     materiales_utilizados = fields.Text(string='Materiales utilizados')
     
-    verificado_por = fields.Many2one('res.users', string='Verificado y liberado por')
+    verificado_por = fields.Many2one('itsa.rh.empleados', string='Verificado y liberado por')
     fecha_liberacion = fields.Date(string='Fecha liberación')
-    aprobado_por = fields.Many2one('res.users', string='Aprobado por')
+    aprobado_por = fields.Many2one('itsa.rh.empleados', string='Aprobado por')
     fecha_aprobacion = fields.Date(string='Fecha aprobación')
     
     # Campo para los estados
@@ -86,3 +80,9 @@ class PersonalProtectionEquipment(models.Model):
     _name = 'personal.protection.equipment'
     
     name = fields.Char('Nombre del equipo', required=True)
+    
+class TipoServicio(models.Model):
+    _name = 'tipo.servicio'
+    _description = 'Tipo de Servicio'
+
+    name = fields.Char('Nombre del Servicio', required=True)

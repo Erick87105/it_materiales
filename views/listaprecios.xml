@@ -23,35 +23,40 @@
             <field name="arch" type="xml">
                 <form string="Lista de Precios">
                     <header>
-                        <button name="actualizar_precio" type="object" string="Actualizar Precio" class="oe_highlight" status="!aplicado"/>
+                        <button name="actualizar_precio" type="object" string="Actualizar Precio" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Lista de Precios</h1>
                         <group>
-                            <field name="fecha" readonly="1"/>
-                            <field name="proveedor_id"/>
-                            <field name="aplicado"/>
+                            <group>
+                                <field name="fecha" readonly="1"/>
+                                <field name="proveedor_id"/>
+                                <field name="aplicado" readonly="1"/>
+                            </group>
                         </group>
                         <notebook>
+                            <!-- Página de Detalles de Lista de Precios -->
                             <page string="Detalles de Lista de Precios">
-                                <field name="line_ids" widget="one2many_list">
+                                <field name="line_ids">
                                     <tree editable="bottom">
                                         <field name="producto_id"/>
                                         <field name="clave"/>
                                         <field name="nombre"/>
+                                        <field name="categoria" readonly="1"/>
+                                        <field name="subcategoria" readonly="1"/>
                                         <field name="precio_actual"/>
                                         <field name="nuevo_precio"/>
                                     </tree>
                                 </field>
                             </page>
-                            <!-- Nueva página para el historial de precios -->
+                            <!-- Página para Historial de Precios -->
                             <page string="Historial de Precios">
-                                <field name="precio_historial_ids" widget="one2many_list">
+                                <field name="precio_historial_ids">
                                     <tree editable="bottom">
                                         <field name="producto_id"/>
-                                        <field name="precio_anterior"/>
-                                        <field name="precio_nuevo"/>
-                                        <field name="fecha_cambio"/>
+                                        <field name="precio_anterior" readonly="1"/>
+                                        <field name="precio_nuevo" readonly="1"/>
+                                        <field name="fecha_cambio" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -61,8 +66,7 @@
             </field>
         </record>
 
-
-        <!-- Vista de búsqueda del modelo materiales.listaprecios -->
+        <!-- Vista de búsqueda para el modelo materiales.listaprecios -->
         <record model="ir.ui.view" id="materiales_listaprecios_search">
             <field name="name">materiales.listaprecios.search</field>
             <field name="model">materiales.listaprecios</field>
@@ -70,7 +74,6 @@
                 <search>
                     <field name="fecha"/>
                     <field name="proveedor_id"/>
-                    <field name="producto_id"/>
                     <field name="aplicado"/>
                 </search>
             </field>

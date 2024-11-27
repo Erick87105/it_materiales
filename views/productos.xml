@@ -4,23 +4,23 @@
         <!-- Vista tipo tree del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_tree">
             <field name="name">materiales.productos.tree</field>
-            <field name="model">materiales.productos</field>
+            <field name="model">itsa.materiales.productos</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Productos y Servicios">
                     <field name="clave" />
-    
                     <field name="name" />
                     <field name="marca" />
                     <field name="modelo" />
+                    <field name="tipo_producto" />
                     <field name="serie" />
-                    <field name="categoria"/>
-                    <field name="subcategoria"/>
+                    <field name="categoria_id"/>
+                    <field name="subcategoria_id"/>
                     <field name="cantidad"/>
                     <field name="valor_actual"/>
                     <field name="valor_depreciado"/>
-                    <field name="anos_vida_util"/>
-                    <field name="depreciacion_anual"/>
+                    <field name="anos_vida_util" readonly="1"/>
+                    <field name="depreciacion_anual" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -28,7 +28,7 @@
         <!-- Vista tipo form del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_form">
             <field name="name">materiales.productos.form</field>
-            <field name="model">materiales.productos</field>
+            <field name="model">itsa.materiales.productos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
@@ -43,22 +43,13 @@
                                     <field name="proveedor_id" placeholder="Proveedor" />
                                     <field name="marca" placeholder="Marca" />
                                     <field name="modelo" placeholder="Modelo" />
-                                    <field name="serie" placeholder="Identificación de Serie" />
+                                    <field name="tipo_producto"/>
                                     <field name="descripcion"/>
                                 </group>
                                 <group>
                                     <field name="clave" />
-                                    <field name="categoria" />
-                                    <field name="subcategoria" 
-                                           domain="[('subcategoria', 'in', 
-                                               categoria == 'inmuebles' and ['viviendas', 'edificios', 'infraestructura', 'otros_inmuebles'] or
-                                               categoria == 'muebles' and ['muebles_oficina', 'muebles_excepcion', 'computo', 'otros_muebles', 'educacional', 'audiovisuales', 'deportivos', 'fotografia_video'] or
-                                               categoria == 'medico' and ['equipo_medico', 'instrumental_medico'] or
-                                               categoria == 'transporte' and ['automoviles', 'carrocerias', 'aeroespacial', 'ferroviario', 'embarcaciones', 'otros_transporte'] or
-                                               categoria == 'maquinaria' and ['agropecuario', 'industrial', 'construccion', 'aire_acondicionado', 'telecomunicacion', 'electrico', 'herramientas', 'otros_equipos'] or
-                                               categoria == 'biologicos' and ['bovinos', 'porcinos', 'aves', 'ovinos_caprinos', 'peces', 'equinos', 'zoologico', 'arboles_plantas', 'otros_biologicos'] or
-                                               categoria == 'servicios' and ['mantenimiento_infraestructura', 'consultoria_academica', 'soporte_tecnico', 'capacitacion', 'limpieza', 'seguridad', 'administrativos']
-                                           )]"/>
+                                    <field name="categoria_id" />
+                                    <field name="subcategoria_id" domain="[('categoria_id', '=', categoria_id)]"/>
                                     <field name="cantidad" />
                                     <field name="valor_actual"/>
                                     <field name="valor_depreciado"/>
@@ -74,19 +65,19 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Vista de búsqueda del modelo materiales.productos -->
         <record model="ir.ui.view" id="materiales_productos_search">
             <field name="name">materiales.productos.search</field>
-            <field name="model">materiales.productos</field>
+            <field name="model">itsa.materiales.productos</field>
             <field name="arch" type="xml">
                 <search>
                     <field name="name" />
                     <field name="marca" />
                     <field name="modelo" />
                     <field name="serie" />
-                    <field name="categoria"/>
-                    <field name="subcategoria"/>
+                    <field name="categoria_id"/>
+                    <field name="subcategoria_id"/>
                 </search>
             </field>
         </record>
@@ -94,10 +85,8 @@
         <!-- Acción para el modelo materiales.productos -->
         <record id="materiales_productos_action" model="ir.actions.act_window">
             <field name="name">Productos y Servicios</field>
-            <field name="res_model">materiales.productos</field>
+            <field name="res_model">itsa.materiales.productos</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!-- Menú para el modelo materiales.productos -->
     </data>
 </openerp>

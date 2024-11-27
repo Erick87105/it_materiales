@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from openerp import models, fields, api
+from openerp.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Listaprecios(models.Model):
     _name = 'materiales.listaprecios'
@@ -18,6 +21,7 @@ class Listaprecios(models.Model):
 
     @api.onchange('proveedor_id')
     def _onchange_proveedor_id(self):
+        """Cargar productos del proveedor seleccionado en 'line_ids'."""
         if self.proveedor_id:
             productos = self.env['materiales.productos'].search([('proveedor_id', '=', self.proveedor_id.id)])
             self.line_ids = [(0, 0, {
@@ -25,12 +29,15 @@ class Listaprecios(models.Model):
                 'clave': producto.clave,
                 'nombre': producto.name,
                 'precio_actual': producto.valor_actual,
+                'categoria': producto.categoria_id.name,
+                'subcategoria': producto.subcategoria_id.name,
             }) for producto in productos]
         else:
             self.line_ids = []
 
     @api.multi
     def actualizar_precio(self):
+        """Actualizar precios de productos y guardar historial de cambios."""
         self.ensure_one()
         if not self.aplicado:
             for line in self.line_ids:
@@ -63,25 +70,36 @@ class Listaprecios(models.Model):
 
     @api.multi
     def sync_catalogo(self):
+        """Sincronizar productos de 'materiales.productos' con 'catalogo.productos'."""
         catalogo_model = self.env['catalogo.productos']
         productos = self.env['materiales.productos'].search([])
+        
         for producto in productos:
             catalogo_producto = catalogo_model.search([('clave', '=', producto.clave)], limit=1)
             if catalogo_producto:
-                catalogo_producto.write({
-                    'nombre': producto.name,
-                    'precio_actual': producto.valor_actual,
-                    'categoria': producto.categoria,
-                    'subcategoria': producto.subcategoria
-                })
+                # Solo actualiza si hay cambios en el producto del catálogo
+                if (catalogo_producto.precio_actual != producto.valor_actual or 
+                    catalogo_producto.categoria != producto.categoria_id.name or 
+                    catalogo_producto.subcategoria != producto.subcategoria_id.name):
+                    
+                    catalogo_producto.write({
+                        'nombre': producto.name,
+                        'precio_actual': producto.valor_actual,
+                        'categoria': producto.categoria_id.name,
+                        'subcategoria': producto.subcategoria_id.name
+                    })
+                    _logger.info("Producto '%s' actualizado en el catálogo.", producto.name)
             else:
+                # Crear producto en catálogo si no existe
                 catalogo_model.create({
                     'clave': producto.clave,
                     'nombre': producto.name,
                     'precio_actual': producto.valor_actual,
-                    'categoria': producto.categoria,
-                    'subcategoria': producto.subcategoria
+                    'categoria': producto.categoria_id.name,
+                    'subcategoria': producto.subcategoria_id.name
                 })
+                _logger.info("Producto '%s' añadido al catálogo.", producto.name)
+
 
 class Detalleprecios(models.Model):
     _name = 'materiales.listaprecios.line'
@@ -92,13 +110,19 @@ class Detalleprecios(models.Model):
     nombre = fields.Char(string='Nombre')
     precio_actual = fields.Float(string='Precio Actual')
     nuevo_precio = fields.Float(string='Nuevo Precio')
+    categoria = fields.Char(string='Categoría')
+    subcategoria = fields.Char(string='Subcategoría')
 
     @api.onchange('producto_id')
     def _onchange_producto_id(self):
+        """Actualizar campos de detalle al seleccionar un producto."""
         if self.producto_id:
             self.clave = self.producto_id.clave
             self.nombre = self.producto_id.name
             self.precio_actual = self.producto_id.valor_actual
+            self.categoria = self.producto_id.categoria_id.name
+            self.subcategoria = self.producto_id.subcategoria_id.name
+
 
 class CatalogoProductos(models.Model):
     _name = 'catalogo.productos'
@@ -110,6 +134,7 @@ class CatalogoProductos(models.Model):
     precio_actual = fields.Float(string='Precio Actual', readonly=True)
     categoria = fields.Char(string='Categoría', readonly=True)
     subcategoria = fields.Char(string='Subcategoría', readonly=True)
+
 
 class PrecioHistorial(models.Model):
     _name = 'materiales.precio.historial'

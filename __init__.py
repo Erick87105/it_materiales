@@ -1,6 +1,10 @@
-
+import lista_compras
+import lista_evaluacion
+import reportes_wizard
+import lista_mantenimiento
+import categorias
 import parametros 
-import programa
+import trabajadores
 import evaluacion
 import proveedor
 import criterios
@@ -17,3 +21,4 @@ import solicitud_mantenimiento
 import lista_verificacion
 import programa_mantenimiento
 import ordentrabajo
+import lista_solicitudMantenimiento 

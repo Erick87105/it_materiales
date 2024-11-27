@@ -1,4 +1,4 @@
-<!-- views/parametros.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <!-- Definición de la acción que se usará en el menú -->
@@ -38,13 +38,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Definición del menú para acceder a la acción -->
-        <menuitem name="Parametros del sistema" 
-                  action="materiales_parametros_action" 
-                  id="menu_materiales_parametros" 
-                  sequence="20" 
-                  parent="menu_materiales_configuracion"/>
     </data>
 </openerp>
 

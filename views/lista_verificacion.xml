@@ -34,13 +34,13 @@
                         <group>
                             <group>
                                 <field name="name" readonly="1"/>
-                                <field name="jefe_area"/>
                                 <field name="area_verificacion"/>
+                                <field name="jefe_area_verificada"/>
                             </group>
                             <group>
                                 <field name="fecha" readonly="1"/>
+                                <field name="jefe_area"/>
                                 <field name="trabajador_area"/>
-                                <field name="jefe_area_verificada"/>
                             </group>
                         </group>
                         <notebook>
@@ -86,12 +86,10 @@
             <field name="res_model">lista.verificacion</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_lista_verificacion_tree"/>
-            <field name="search_view_id" ref="view_lista_verificacion_search"/>
+            <!-- <field name="view_id" ref="view_lista_verificacion_tree"/>
+            <field name="search_view_id" ref="view_lista_verificacion_search"/> -->
         </record>
 
-        <!-- Menú para acceder a las vistas -->
-        <menuitem id="menu_lista_verificacion_root" name="Listas de Verificación"/>
-        <menuitem id="menu_lista_verificacion" name="Listas de Verificación" parent="menu_lista_verificacion_root" action="action_lista_verificacion"/>
+    
     </data>
 </openerp>

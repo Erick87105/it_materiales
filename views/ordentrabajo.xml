@@ -92,10 +92,7 @@
             <field name="res_model">materiales.orden.trabajo</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_materiales_orden_trabajo_tree"/>
         </record>
 
-        <!-- Menú para acceder a las órdenes de trabajo de mantenimiento -->
-        <menuitem id="menu_materiales_orden_trabajo" name="Orden de Trabajo" parent="menu_materiales_mantenimiento" action="action_materiales_orden_trabajo" sequence="10"/>
     </data>
 </openerp>

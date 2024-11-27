@@ -6,7 +6,6 @@
             <field name="res_model">materiales.recepcion</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="materiales_recepcion_tree"/>
         </record>
 
         <!-- Vista del formulario de recepción de materiales -->
@@ -15,82 +14,56 @@
             <field name="model">materiales.recepcion</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Recepción de Materiales" version="7.0">
+                <form string="Recepción de Materiales">
                     <header>
-                        <button name="action_aplicar" type="object" string="Aplicar" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}" />
-                        <button name="action_cancelar" type="object" string="Cancelar" attrs="{'invisible': [('status', '!=', 'creado')]}" />
+                        <button name="action_cargar_detalles" type="object" string="Cargar Detalles" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
+                        <!-- <button name="validar_costos" type="object" string="Validar Costos" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/> -->
+                        <button name="action_comparar_catalogo" type="object" string="Comparar con Catálogo" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
+                        <button name="action_comparar_productos" type="object" string="Comparar con Productos" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
+                        <button name="action_aplicar" type="object" string="Aplicar" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
+                        <button name="action_cancelar" type="object" string="Cancelar" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
                         <field name="status" widget="statusbar" statusbar_visible="creado,aplicado,cancelado"/>
                     </header>
                     <sheet>
                         <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Recepción de Compras</h1>
-
                         <group>
                             <group>
                                 <field name="name" string="Folio" readonly="1"/>
                                 <field name="fecha" string="Fecha de Recepción" readonly="1"/>
                                 <field name="ubicacion_recepcion" string="Ubicación"/>
+                                <field name="numero_factura"/>
                             </group>
                             <group>
                                 <field name="compra_ids" widget="many2many_tags" string="Compras Asociadas"/>
                                 <field name="observaciones" string="Observaciones"/>
+                                <field name="total_costo_real" readonly="1" string="Total Costo Real"/>
+
                             </group>
+
                         </group>
-                        <notebook>
-                            <page string="Detalles de Recepción">
-                                <field name="detalle_ids">
+                        <group string="Detalles de Recepción">
+                                <field name="detalle_ids3" nolabel="1">
                                     <tree editable="bottom">
-                                        <field name="producto" string="Producto"/>
-                                        <field name="marca" string="Marca"/>
-                                        <field name="modelo" string="Modelo"/>
-                                        <field name="serie" string="Serie"/>
-                                        <!-- Relacionar la categoría con la tabla depreciacion.categoria -->
-                                        <field name="categoria_id" string="Categoría"/>
-                                        <!-- Relacionar la subcategoría con la tabla depreciacion.subcategoria y aplicar dominio según la categoría seleccionada -->
-                                        <field name="subcategoria_id" string="Subcategoría" domain="[('categoria_id', '=', categoria_id)]"/>
+                                        <field name="compra_id" string="Compra"/>
+                                        <field name="recepcion_id" string="Recepcion"/>
+                                        <field name="clave" string="Clave Del Producto"/>
+                                        <field name="producto_id" string="Producto"/>
                                         <field name="cantidad" string="Cantidad"/>
                                         <field name="costo_estimado" string="Costo Estimado"/>
                                         <field name="costo_real" string="Costo Real"/>
-                                        <!-- Nuevos campos agregados: Años de Vida Útil y Depreciación Anual calculados automáticamente -->
-                                        <field name="anos_vida_util" string="Años de Vida Útil" readonly="1"/>
-                                        <field name="depreciacion_anual" string="Depreciación Anual (%)" readonly="1"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            
-                            <page string="Facturas">
-                                <field name="factura_ids">
-                                    <tree editable="bottom">
-                                        <field name="numero_factura" string="Número de Factura"/>
                                         <field name="proveedor_id" string="Proveedor"/>
-                                        <field name="fecha_emision" string="Fecha de Emisión"/>
-                                        <field name="monto_total" string="Monto Total"/>
+                                        <field name="descripcion" string="Descripción"/>
                                     </tree>
-                                    <form>
-                                        <group>
-                                            <field name="numero_factura" string="Número de Factura"/>
-                                            <field name="proveedor_id" string="Proveedor"/>
-                                            <field name="fecha_emision" string="Fecha de Emisión"/>
-                                            <field name="monto_total" string="Monto Total"/>
-                                        </group>
-                                        <group>
-                                            <field name="detalles_factura" string="Detalles de Factura">
-                                                <tree editable="bottom">
-                                                    <field name="producto_id" string="Producto"/>
-                                                    <field name="cantidad" string="Cantidad"/>
-                                                    <field name="precio_unitario" string="Precio Unitario"/>
-                                                    <field name="subtotal" string="Subtotal"/>
-                                                </tree>
-                                            </field>
-                                        </group>
-                                    </form>
                                 </field>
-                            </page>
-                        </notebook>
+                        </group>
+
+                        <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
                         <footer>
-                            <button name="action_validar_recepcion" type="object" string="Validar Recepción" class="btn-primary" attrs="{'invisible': [('status', '!=', 'creado')]}" />
-                            <button name="action_aplicar" type="object" string="Aplicar" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
-                            <button name="action_cancelar" type="object" string="Cancelar" attrs="{'invisible': [('status', '!=', 'creado')]}"/>
                             <button string="Cerrar" class="oe_link" special="cancel"/>
+                            <button name="action_agregar_impuesto" type="object" string="Agregar IVA" class="btn-primary"/>
+
                         </footer>
                     </sheet>
                 </form>
@@ -113,200 +86,24 @@
             </field>
         </record>
 
-        <!-- Acción para abrir la vista de facturas -->
-        <record id="action_materiales_factura" model="ir.actions.act_window">
-            <field name="name">Facturas</field>
-            <field name="res_model">materiales.factura</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="materiales_factura_tree"/>
-        </record>
-
-        <!-- Vista de lista para las facturas -->
-        <record model="ir.ui.view" id="materiales_factura_tree">
-            <field name="name">materiales.factura.tree</field>
-            <field name="model">materiales.factura</field>
-            <field name="type">tree</field>
+        <!-- Vista de Detalles de Recepción -->
+        <record model="ir.ui.view" id="view_detallerec_form">
+            <field name="name">materiales.detalle.recepcion.form</field>
+            <field name="model">materiales.detalle.recepcion</field>
             <field name="arch" type="xml">
-                <tree string="Facturas">
-                    <field name="numero_factura" string="Número de Factura"/>
-                    <field name="proveedor_id" string="Proveedor"/>
-                    <field name="fecha_emision" string="Fecha de Emisión"/>
-                    <field name="monto_total" string="Monto Total"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Vista de formulario para las facturas -->
-        <record model="ir.ui.view" id="materiales_factura_form">
-            <field name="name">materiales.factura.form</field>
-            <field name="model">materiales.factura</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Factura de Materiales" version="7.0">
+                <form string="Detalles de Recepción">
                     <sheet>
-                        <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Facturas</h1>
-
                         <group>
-                            <group>
-                                <field name="numero_factura" string="Número de Factura"/>
+                                <field name="compra_id" string="Compra Asociada"/>
+                                <field name="recepcion_id" string="Recepcion"/>
+                                <field name="clave" string="Clave"/>
+                                <field name="producto_id" string="Producto"/>
+                                <field name="cantidad" string="Cantidad"/>
+                                <field name="costo_estimado" string="Costo Estimado"/>
+                                <field name="costo_real" string="Costo Real"/>
                                 <field name="proveedor_id" string="Proveedor"/>
-                                <field name="rfc" string="RFC"/>
-                            </group>
-                            <group>
-                                <field name="fecha_emision" string="Fecha de Emisión"/>
-                                <field name="monto_total" string="Monto Total"/>
-                            </group>
-                        </group>
-                        <group>
-                            <field name="recepcion_ids" widget="many2many_tags" string="Recepciones Asociadas"/>
-                        </group>
-                        <group>
-                            <field name="detalles_factura" string="Detalles de Factura">
-                                <tree editable="bottom">
-                                    <field name="producto_id" string="Producto"/>
-                                    <field name="cantidad" string="Cantidad"/>
-                                    <field name="precio_unitario" string="Precio Unitario"/>
-                                    <field name="subtotal" string="Subtotal"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
- <!-- Vista de Categoría de Depreciación -->
-        <record model="ir.ui.view" id="view_depreciacion_categoria_form">
-            <field name="name">depreciacion.categoria.form</field>
-            <field name="model">depreciacion.categoria</field>
-            <field name="arch" type="xml">
-                <form string="Categoría de Depreciación">
-                    <sheet>
-                        <group>
-                            <field name="nombre"/>
-                            <field name="descripcion"/>
-                        </group>
-                        <group>
-                            <field name="subcategoria_ids">
-                                <tree string="Subcategorías">
-                                    <field name="nombre"/>
-                                    <field name="anos_vida_util"/>
-                                    <field name="depreciacion_anual"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                                <field name="descripcion" string="Descripción"/> 
 
-        <!-- Vista de Subcategoría de Depreciación -->
-        <record model="ir.ui.view" id="view_depreciacion_subcategoria_form">
-            <field name="name">depreciacion.subcategoria.form</field>
-            <field name="model">depreciacion.subcategoria</field>
-            <field name="arch" type="xml">
-                <form string="Subcategoría de Depreciación">
-                    <sheet>
-                        <group>
-                            <field name="nombre"/>
-                            <field name="descripcion"/>
-                            <field name="anos_vida_util"/>
-                            <field name="depreciacion_anual"/>
-                            <field name="categoria_id"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Vista de Detalles de Recepción -->
-        <record model="ir.ui.view" id="view_detallerec_form">
-            <field name="name">detallerec.form</field>
-            <field name="model">materiales.detallerec</field>
-            <field name="arch" type="xml">
-                <form string="Detalles de Recepción">
-                    <sheet>
-                        <group>
-                            <field name="producto"/>
-                            <field name="marca"/>
-                            <field name="modelo"/>
-                            <field name="serie"/>
-                            <field name="categoria_id"/>
-                            <field name="subcategoria_id"/>
-                            <field name="cantidad"/>
-                            <field name="costo_estimado"/>
-                            <field name="costo_real"/>
-                            <field name="anos_vida_util"/>
-                            <field name="depreciacion_anual"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-         <!-- Vista de Categoría de Depreciación -->
-         <record model="ir.ui.view" id="view_depreciacion_categoria_form">
-            <field name="name">depreciacion.categoria.form</field>
-            <field name="model">depreciacion.categoria</field>
-            <field name="arch" type="xml">
-                <form string="Categoría de Depreciación">
-                    <sheet>
-                        <group>
-                            <field name="nombre"/>
-                            <field name="descripcion"/>
-                        </group>
-                        <group>
-                            <field name="subcategoria_ids">
-                                <tree string="Subcategorías">
-                                    <field name="nombre"/>
-                                    <field name="anos_vida_util"/>
-                                    <field name="depreciacion_anual"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Vista de Subcategoría de Depreciación -->
-        <record model="ir.ui.view" id="view_depreciacion_subcategoria_form">
-            <field name="name">depreciacion.subcategoria.form</field>
-            <field name="model">depreciacion.subcategoria</field>
-            <field name="arch" type="xml">
-                <form string="Subcategoría de Depreciación">
-                    <sheet>
-                        <group>
-                            <field name="nombre"/>
-                            <field name="descripcion"/>
-                            <field name="anos_vida_util"/>
-                            <field name="depreciacion_anual"/>
-                            <field name="categoria_id"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Vista de Detalles de Recepción -->
-        <record model="ir.ui.view" id="view_detallerec_form">
-            <field name="name">detallerec.form</field>
-            <field name="model">materiales.detallerec</field>
-            <field name="arch" type="xml">
-                <form string="Detalles de Recepción">
-                    <sheet>
-                        
-                        <group>
-                            <field name="producto"/>
-                            <field name="marca"/>
-                            <field name="modelo"/>
-                            <field name="serie"/>
-                            <field name="categoria_id"/>
-                            <field name="subcategoria_id"/>
-                            <field name="cantidad"/>
-                            <field name="costo_estimado"/>
-                            <field name="costo_real"/>
-                            <field name="anos_vida_util"/>
-                            <field name="depreciacion_anual"/>
                         </group>
                     </sheet>
                 </form>

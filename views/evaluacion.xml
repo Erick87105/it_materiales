@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
         <!-- Definición de una vista de formularios para la evaluación de proveedores -->
@@ -82,5 +83,32 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="materiales_evaluacion_tree_view"/>
         </record>
+
+        
+             <!-- Genera el boton de solicitud-->
+        <report id="custom_evaluacion" model="materiales.evaluacion"
+            string="Evaluacion de Proveedores" report_type="qweb-pdf" name="it_materiales.evaluacion_reporte" attachment_use="False" file="evaluacion_reporte" />
+        
+        <record id="reporte_evaluacion" model="report.paperformat">
+            <field name="name">PROGRAMA DE MANTENIMIENTO</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">279</field>
+            <field name="page_width">215</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">60</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">51</field>
+            <field name="footer_spacing">30</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="it_materiales.custom_evaluacion" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="it_materiales.reporte_evaluacion"/>
+        </record>
+               
     </data>
 </openerp>
