@@ -38,7 +38,7 @@ class Productos(models.Model):
     categoria_id = fields.Many2one('depreciacion.categoria', string='Categoría de Depreciación', required=True)
     subcategoria_id = fields.Many2one('depreciacion.subcategoria', string='Subcategoría de Depreciación', domain="[('categoria_id', '=', categoria_id)]", required=True)
 
-    cantidad = fields.Integer(string='Stock', default=1, readonly=True)
+    cantidad = fields.Integer(string='Stock', default=1)
     anos_vida_util = fields.Integer(string='Años de Vida Útil', readonly=True)
     depreciacion_anual = fields.Float(string='% de Depreciación Anual', readonly=True)
     valor_actual = fields.Float(string='Valor Actual')

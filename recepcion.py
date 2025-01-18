@@ -83,18 +83,34 @@ class Recepcion(models.Model):
                 
     @api.multi
     def action_aplicar(self):
+        
         """ Método para aplicar la recepción, cambiando su estado y actualizando las compras relacionadas. """
+        
         # Validar costos antes de aplicar
         self.validar_costos()
         
         # Cambiar estado de la recepción
         self.write({'status': 'aplicado'})
         
-        # Actualizar estado de compras relacionadas
+        # Actualiza el estado de la compra relacionada
         if self.compra_ids:
             self.compra_ids.write({'status': 'recibido'})
         
-        _logger.info("Recepción '%s' aplicada correctamente", self.name)
+        # Actualizamos el stock de los productos
+        for detalle in self.detalle_ids3:  # Iteramos sobre los detalles de la recepción
+            # Buscamos el producto correspondiente
+            producto = self.env['itsa.materiales.productos'].search([('clave', '=', detalle.clave)], limit=1)
+            
+            if producto:
+                # Si el producto existe, actualizamos su stock
+                producto.write({'cantidad': producto.cantidad + detalle.cantidad})
+            else:
+                # Si el producto no se encuentra, lanzamos un error
+                raise ValidationError("No se encontró el producto con clave: {}".format(detalle.clave))
+        
+        _logger.info("Recepción '%s' aplicada correctamente y el stock ha sido actualizado", self.name)
+
+        return True
 
     @api.multi
     def action_cancelar(self):
@@ -174,14 +190,19 @@ class Recepcion(models.Model):
 # Este método se encarga de buscar un producto similar del modelo productos basándose en la descripción de la compra, la cual se pasa como parámetro.
     def buscar_producto_similar(self, descripcion):
 
+        # Obtiene el valor del parámetro 'similitud_cadenas'
+        similitud_minima = float(self.env['materiales.parametros'].get_param('similitud_cadenas'))
+
         # Aquí se busca en el modelo itsa.materiales.productos (el catálogo de productos) todos los registros (search([])). La variable productos contiene la lista de todos los productos.
         productos = self.env['itsa.materiales.productos'].search([])
 
         for producto in productos:
             similitud = difflib.SequenceMatcher(None, producto.name, descripcion).ratio()
-            if similitud >= 0.6:  # Coincidencia del 80% o más
+            if similitud >= similitud_minima:  # Coincidencia del 80% o más
                 return producto
         return None
+
+
 
     def validar_costos(self):
         """ Validar que los costos reales no superen el umbral permitido respecto al costo estimado. """

@@ -12,13 +12,16 @@ class RequisicionesDet(models.Model):
 class Compras(models.Model):
     
     _name = 'materiales.comprados'
-
+    
+    # Definir la variable STATUS_SELECTION antes de usarla
     STATUS_SELECTION = [
         ('creado', 'Creado'),
         ('pedido', 'Pedido'),
         ('recibido', 'Recibido'),
         ('cancelado', 'Cancelado'),
     ]
+
+    # Ahora puedes utilizar STATUS_SELECTION
 
     name = fields.Char(string='Folio', readonly=True)
     fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)

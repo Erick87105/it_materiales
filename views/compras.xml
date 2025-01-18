@@ -7,7 +7,7 @@
             <field name="model">materiales.comprados</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Compras">
+                <tree string="Compras" >
                     <field name="name"/>
                     <field name="fecha"/>
                     <field name="proveedor_id"/>
@@ -25,13 +25,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compras">
+
                     <header>
-                        <button name="action_confirm" type="object" string="Confirmar compra" class="oe_highlight"/>
-                        <!-- <button name="action_receive" type="object" string="Recibir" class="oe_highlight"/> -->
-                        <button name="action_cancel" type="object" string="Cancelar" class="oe_highlight"/>
-                        <button name="copy_requisiciones_to_detalle" type="object" string="Copiar detalles de requisiciones" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Confirmar compra" class="oe_highlight" attrs="{'invisible': [('status', '=', 'recibido')]}"/>
+                        <button name="action_cancel" type="object" string="Cancelar" class="oe_highlight" attrs="{'invisible': [('status', '=', 'recibido')]}"/>
+                        <button name="copy_requisiciones_to_detalle" type="object" string="Copiar detalles de requisiciones" class="oe_highlight" attrs="{'invisible': [('status', '=', 'recibido')]}"/>
+                        
                         <field name="status" widget="statusbar" statusbar_visible="creado,pedido,recibido,cancelado"/>
                     </header>
+
                     <sheet>
                         <h1 style="font-size:20px;color:#2E86C1;font-weight:bold;text-align:center">Compras de Productos o Servicios</h1>
 
