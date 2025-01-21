@@ -4,7 +4,7 @@ from openerp import models, fields, api
 class MaterialesParametros(models.Model):
     _name = 'materiales.parametros'
     
-    key = fields.Char('Clave', required=True, index=True)
+    key = fields.Char('Nombre del Parametro', required=True, index=True)
     value = fields.Char('Valor', required=True)
 
     @api.model

@@ -35,8 +35,8 @@ class Productos(models.Model):
     serie = fields.Char(string='Identificación de Serie')
 
     # Cambiamos la selección por relaciones a las tablas de depreciación
-    categoria_id = fields.Many2one('depreciacion.categoria', string='Categoría de Depreciación', required=True)
-    subcategoria_id = fields.Many2one('depreciacion.subcategoria', string='Subcategoría de Depreciación', domain="[('categoria_id', '=', categoria_id)]", required=True)
+    categoria_id = fields.Many2one('depreciacion.categoria', string='Categoría', required=True)
+    subcategoria_id = fields.Many2one('depreciacion.subcategoria', string='Subcategoría', domain="[('categoria_id', '=', categoria_id)]", required=True)
 
     cantidad = fields.Integer(string='Stock', default=1)
     anos_vida_util = fields.Integer(string='Años de Vida Útil', readonly=True)

@@ -8,9 +8,7 @@ class Requisiciones(models.Model):
 class RequisicionesDet(models.Model):
     _inherit = 'itsa.planeacion.requisiciones_det'
 
-
 class Compras(models.Model):
-    
     _name = 'materiales.comprados'
     
     # Definir la variable STATUS_SELECTION antes de usarla
@@ -20,8 +18,6 @@ class Compras(models.Model):
         ('recibido', 'Recibido'),
         ('cancelado', 'Cancelado'),
     ]
-
-    # Ahora puedes utilizar STATUS_SELECTION
 
     name = fields.Char(string='Folio', readonly=True)
     fecha = fields.Datetime(string='Fecha y hora', default=fields.Datetime.now, readonly=True)
